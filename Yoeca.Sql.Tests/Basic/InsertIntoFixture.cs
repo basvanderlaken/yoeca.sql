@@ -22,21 +22,10 @@ namespace Yoeca.Sql.Tests.Basic
             };
 
             string expected = @"INSERT INTO Extended (Identifier, Name, Age, Payload) VALUES ('" +
-                              value.Identifier.ToString("N") + "', 'Foo', '10', x'FF000000')";
+                              value.Identifier.ToString("N") + "', 'Foo', 10, x'FF000000')";
 
 
             string command = InsertInto.Row(value).Format(SqlFormat.MySql);
-
-            Assert.That(command, Is.EqualTo(expected));
-        }
-
-        [Test]
-        public void SupportForSimpleType()
-        {
-            const string expected = @"CREATE TABLE Simple(
-Name TEXT
-)";
-            string command = CreateTable.For<SimpleTable>().Format(SqlFormat.MySql);
 
             Assert.That(command, Is.EqualTo(expected));
         }

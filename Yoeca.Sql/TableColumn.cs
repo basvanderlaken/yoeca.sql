@@ -1,17 +1,18 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using JetBrains.Annotations;
-using ProtoBuf;
+using Yoeca.Sql.Converters;
 
 namespace Yoeca.Sql
 {
     public sealed class TableColumn
     {
         public readonly DataType DataType;
+
         [NotNull]
         public readonly string Name;
+
         public readonly bool NotNull;
         public readonly bool PrimaryKey;
         public readonly int Size;
@@ -47,6 +48,24 @@ namespace Yoeca.Sql
             return new TableColumn(DataType.Integer, 0, name, false, primaryKey);
         }
 
+        [NotNull]
+        public static TableColumn Long([NotNull] string name, bool primaryKey)
+        {
+            return new TableColumn(DataType.Long, 0, name, false, primaryKey);
+        }
+
+        [NotNull]
+        public static TableColumn Blob([NotNull] string name, bool notNull, bool primaryKey)
+        {
+            return new TableColumn(DataType.Binary, 0, name, notNull, primaryKey);
+        }
+
+        [NotNull]
+        public static TableColumn Double([NotNull] string name, bool hasSqlPrimaryKey)
+        {
+            return new TableColumn(DataType.Double, 0, name, false, hasSqlPrimaryKey);
+        }
+
 
         [NotNull]
         public string Format(SqlFormat format)
@@ -76,6 +95,10 @@ namespace Yoeca.Sql
                     return string.Format("{0} TEXT", Name);
                 case DataType.Integer:
                     return string.Format("{0} INT", Name);
+                case DataType.Double:
+                    return string.Format("{0} DOUBLE", Name);
+                case DataType.Long:
+                    return string.Format("{0} BIGINT", Name);
                 case DataType.Binary:
                     if (Size > 16777215)
                     {
@@ -92,86 +115,41 @@ namespace Yoeca.Sql
             }
         }
 
-        private static int GetFixedSize([NotNull] PropertyInfo property, int defaultSize = -1)
+        public static int GetFixedSize([NotNull] PropertyInfo property, int defaultSize = -1)
         {
             var attribute = property.GetCustomAttribute<FixedSizeAttribute>();
 
             return attribute?.Size ?? -1;
         }
 
-        private static int GetMaximumSize([NotNull] PropertyInfo property, int defaultSize = -1)
+        public static int GetMaximumSize([NotNull] PropertyInfo property, int defaultSize = -1)
         {
             var attribute = property.GetCustomAttribute<MaximumSizeAttribute>();
 
             return attribute?.Size ?? defaultSize;
         }
 
+        public static bool HasSqlNotNull([NotNull] PropertyInfo property)
+        {
+            return Attribute.GetCustomAttributes(property, typeof(SqlNotNullAttribute)).Any();
+        }
+
+        public static bool HasSqlPrimaryKey([NotNull] PropertyInfo property)
+        {
+            return Attribute.GetCustomAttributes(property, typeof(SqlPrimaryKeyAttribute)).Any();
+        }
+
         [NotNull]
         public static TableColumn Create([NotNull] PropertyInfo property)
         {
-            bool hasNotNullAttribute = Attribute.GetCustomAttributes(property, typeof(SqlNotNullAttribute)).Any();
-            bool hasPrimaryKeyAttribute = Attribute.GetCustomAttributes(property, typeof(SqlPrimaryKeyAttribute)).Any();
-
-            if (property.PropertyType == typeof(string))
+            foreach (var columnConverter in ColumnConverters.Default)
             {
-                int fixedSize = GetFixedSize(property);
+                var retriever = columnConverter.TryGet(property);
 
-                if (fixedSize != -1)
+                if (retriever != null)
                 {
-                    return FixedText(property.Name, fixedSize, hasNotNullAttribute, hasPrimaryKeyAttribute);
+                    return retriever.TableColumn;
                 }
-
-                int maximumSize = GetMaximumSize(property);
-
-                if (maximumSize != -1)
-                {
-                    return VariableText(property.Name, hasNotNullAttribute, hasPrimaryKeyAttribute, maximumSize);
-                }
-
-                return VariableText(property.Name, hasNotNullAttribute, hasPrimaryKeyAttribute);
-            }
-
-            if (property.PropertyType == typeof(Guid))
-            {
-                return FixedText(property.Name, 32, true, hasPrimaryKeyAttribute);
-            }
-
-            if (property.PropertyType == typeof(Int32))
-            {
-                return Integer(property.Name, hasPrimaryKeyAttribute);
-            }
-
-
-            var typeConverterAttribute = property.GetCustomAttribute<TypeConverterAttribute>() ??
-                                         property.PropertyType.GetCustomAttribute<TypeConverterAttribute>();
-
-            if (typeConverterAttribute != null)
-            {
-                Type converterType = Type.GetType(typeConverterAttribute.ConverterTypeName);
-                if (converterType != null)
-                {
-                    var converter = Activator.CreateInstance(converterType) as TypeConverter;
-
-                    if (converter != null && converter.CanConvertTo(typeof(byte[])))
-                    {
-                        return new TableColumn(DataType.Binary,
-                            0,
-                            property.Name,
-                            hasNotNullAttribute,
-                            hasPrimaryKeyAttribute);
-                    }
-                }
-            }
-
-            var protoContract = property.PropertyType.GetCustomAttribute<ProtoContractAttribute>();
-
-            if (protoContract != null)
-            {
-                return new TableColumn(DataType.Binary,
-                    GetMaximumSize(property, 0),
-                    property.Name,
-                    hasNotNullAttribute,
-                    hasPrimaryKeyAttribute);
             }
 
             throw new NotSupportedException("Type '" + property.PropertyType + "' is not a supported column type.");

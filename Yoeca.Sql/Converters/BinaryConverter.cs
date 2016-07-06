@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Globalization;
 using JetBrains.Annotations;
 
-namespace Yoeca.Sql
+namespace Yoeca.Sql.Converters
 {
     internal sealed class BinaryConverter : TypeConverter
     {

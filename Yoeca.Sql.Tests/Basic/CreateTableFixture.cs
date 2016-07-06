@@ -19,12 +19,34 @@ PRIMARY KEY (Identifier)
         }
 
         [Test]
+        public void SupportForDatetime()
+        {
+            const string expected = @"CREATE TABLE simple_datetime(
+Value BIGINT
+)";
+            string command = CreateTable.For<SimpleTableWithDateTime>().Format(SqlFormat.MySql);
+
+            Assert.That(command, Is.EqualTo(expected));
+        }
+
+        [Test]
+        public void SupportForDouble()
+        {
+            const string expected = @"CREATE TABLE simple_double(
+Value DOUBLE
+)";
+            string command = CreateTable.For<SimpleTableWithDouble>().Format(SqlFormat.MySql);
+
+            Assert.That(command, Is.EqualTo(expected));
+        }
+
+        [Test]
         public void SupportForSimpleType()
         {
             const string expected = @"CREATE TABLE Simple(
 Name TEXT
 )";
-            string command = CreateTable.For<SimpleTable>().Format(SqlFormat.MySql);
+            string command = CreateTable.For<SimpleTableWithName>().Format(SqlFormat.MySql);
 
             Assert.That(command, Is.EqualTo(expected));
         }

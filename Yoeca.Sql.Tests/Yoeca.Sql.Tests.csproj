@@ -65,7 +65,9 @@
     <Compile Include="Basic\ExtendedTable.cs" />
     <Compile Include="Basic\InsertIntoFixture.cs" />
     <Compile Include="Basic\SelectFixture.cs" />
-    <Compile Include="Basic\SimpleTable.cs" />
+    <Compile Include="Basic\SimpleTableWithDatetime.cs" />
+    <Compile Include="Basic\SimpleTableWithDouble.cs" />
+    <Compile Include="Basic\SimpleTableWithName.cs" />
     <Compile Include="Integration\IdentifiedBlob.cs" />
     <Compile Include="Integration\MySqlTestDatabase.cs" />
     <Compile Include="Integration\Payload.cs" />

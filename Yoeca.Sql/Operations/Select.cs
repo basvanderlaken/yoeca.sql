@@ -96,8 +96,7 @@ namespace Yoeca.Sql
 
             string formattedValue = column.Convert.ConvertToString(value);
 
-            Type valueType = typeof(TResult);
-            if (valueType == typeof(string) || valueType == typeof(Guid))
+            if (column.RequiresEscaping)
             {
                 formattedValue = "'" + formattedValue + "'";
             }

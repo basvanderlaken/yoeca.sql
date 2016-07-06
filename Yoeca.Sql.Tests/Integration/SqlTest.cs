@@ -25,14 +25,16 @@ namespace Yoeca.Sql.Tests.Integration
                 {
                     Identifier = Guid.NewGuid(),
                     Name = "Peter",
-                    Age = 22
+                    Age = 22,
+                    Birthday = new DateTime(1983, 3, 21).ToUniversalTime()
                 };
 
                 var willem = new Player
                 {
                     Identifier = Guid.NewGuid(),
                     Name = "Willem",
-                    Age = 50
+                    Age = 50,
+                    Birthday = new DateTime(1983, 3, 22).ToUniversalTime()
                 };
 
                 InsertInto.Row(peter).Execute(connection);
@@ -45,10 +47,13 @@ namespace Yoeca.Sql.Tests.Integration
                 Assert.That(selectResult, Has.Count.EqualTo(2));
                 Assert.That(selectResult[0].Name, Is.EqualTo(peter.Name));
                 Assert.That(selectResult[0].Identifier, Is.EqualTo(peter.Identifier));
+                Assert.That(selectResult[0].Age, Is.EqualTo(peter.Age));
+                Assert.That(selectResult[0].Birthday, Is.EqualTo(peter.Birthday));
+
                 Assert.That(selectResult[1].Name, Is.EqualTo(willem.Name));
                 Assert.That(selectResult[1].Identifier, Is.EqualTo(willem.Identifier));
                 Assert.That(selectResult[1].Age, Is.EqualTo(willem.Age));
-                Assert.That(selectResult[1].Age, Is.EqualTo(willem.Age));
+                Assert.That(selectResult[1].Birthday, Is.EqualTo(willem.Birthday));
 
 
                 selectResult = Select.From<Player>()

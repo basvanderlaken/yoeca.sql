@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Yoeca.Sql</id>
-    <version>0.0.4</version>
+    <version>0.0.5</version>
     <title>Yoeca.Sql - simple SQL formatter</title>
     <authors>Bas van der Laken</authors>    
     <owners>bas@yoeca.nl</owners>
@@ -14,12 +14,14 @@
     * inserting record
     * select records with simple where clause
     * binary blobs using proto buffers
+    * doubles &amp; date-time
     </releaseNotes>
     <copyright>Copyright 2016</copyright>
     <tags>SQL</tags>
     <dependencies>
-      <dependency id="System.Collections.Immutable" version="1.1.37" />
-      <dependency id="JetBrains.Annotations" version="10.1.4" />
+      <dependency id="System.Collections.Immutable" version="1.2.0" />
+      <dependency id="JetBrains.Annotations" version="10.1.5" />
+      <dependency id="protobuf-net" version="2.0.0.668" />
     </dependencies>
   </metadata>
   <files>

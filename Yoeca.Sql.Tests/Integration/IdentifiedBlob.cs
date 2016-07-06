@@ -2,7 +2,7 @@
 
 namespace Yoeca.Sql.Tests.Integration
 {
-    [TableDefinition("IdentifiedBlobs")]
+    [SqlTableDefinition("IdentifiedBlobs")]
     public sealed class IdentifiedBlob
     {
         [SqlPrimaryKey]

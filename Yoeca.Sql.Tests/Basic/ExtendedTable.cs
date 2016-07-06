@@ -4,7 +4,7 @@ using System.Globalization;
 
 namespace Yoeca.Sql.NUnit
 {
-    [TableDefinition("Extended")]
+    [SqlTableDefinition("Extended")]
     internal sealed class ExtendedTable
     {
         [SqlPrimaryKey]

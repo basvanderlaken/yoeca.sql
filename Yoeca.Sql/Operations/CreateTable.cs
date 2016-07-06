@@ -49,7 +49,7 @@ namespace Yoeca.Sql
         {
             var type = typeof(T);
 
-            var definition = type.GetCustomAttributes(false).OfType<TableDefinitionAttribute>().Single();
+            var definition = type.GetCustomAttributes(false).OfType<SqlTableDefinitionAttribute>().Single();
 
             var result = WithName(definition.Name);
 

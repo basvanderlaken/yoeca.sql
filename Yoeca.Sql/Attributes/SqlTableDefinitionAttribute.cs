@@ -4,11 +4,11 @@ using JetBrains.Annotations;
 namespace Yoeca.Sql
 {
     [AttributeUsage(AttributeTargets.Class)]
-    public sealed class TableDefinitionAttribute : Attribute
+    public sealed class SqlTableDefinitionAttribute : Attribute
     {
         public readonly string Name;
 
-        public TableDefinitionAttribute([NotNull] string name)
+        public SqlTableDefinitionAttribute([NotNull] string name)
         {
             Name = name;
         }

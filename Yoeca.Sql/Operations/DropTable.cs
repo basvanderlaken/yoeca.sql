@@ -22,7 +22,7 @@ namespace Yoeca.Sql
         {
             var type = typeof(T);
 
-            var definition = type.GetCustomAttributes(false).OfType<TableDefinitionAttribute>().Single();
+            var definition = type.GetCustomAttributes(false).OfType<SqlTableDefinitionAttribute>().Single();
 
             return WithName(definition.Name);
         }

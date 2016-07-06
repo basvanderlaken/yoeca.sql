@@ -10,7 +10,7 @@ namespace Yoeca.Sql.Tests.Basic
         [Test]
         public void SelectAll()
         {
-            Assert.That(Select<SimpleTable>.All().Format(SqlFormat.MySql), Is.EqualTo("SELECT Name FROM Simple"));
+            Assert.That(Select<SimpleTableWithName>.All().Format(SqlFormat.MySql), Is.EqualTo("SELECT Name FROM Simple"));
             Assert.That(Select<ExtendedTable>.All().Format(SqlFormat.MySql),
                 Is.EqualTo("SELECT Identifier, Name, Age, Payload FROM Extended"));
         }
