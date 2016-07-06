@@ -10,6 +10,7 @@ namespace Yoeca.Sql
     public sealed class TableColumn
     {
         public readonly DataType DataType;
+        [NotNull]
         public readonly string Name;
         public readonly bool NotNull;
         public readonly bool PrimaryKey;

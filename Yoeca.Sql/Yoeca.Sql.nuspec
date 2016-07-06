@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Yoeca.Sql</id>
-    <version>0.0.3</version>
+    <version>0.0.4</version>
     <title>Yoeca.Sql - simple SQL formatter</title>
     <authors>Bas van der Laken</authors>    
     <owners>bas@yoeca.nl</owners>
