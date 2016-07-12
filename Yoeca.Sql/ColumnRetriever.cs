@@ -36,7 +36,19 @@ namespace Yoeca.Sql
 
         public bool RequiresEscaping { get; }
 
-        public void Set(object value, object target)
+        public void Set([CanBeNull] object value, [NotNull] object target)
+        {
+            object propertyValue = GetValue(value);
+
+            Property.SetMethod.Invoke(target,
+                new[]
+                {
+                    propertyValue
+                });
+        }
+
+        [CanBeNull]
+        public object GetValue([CanBeNull] object value)
         {
             object propertyValue;
 
@@ -50,11 +62,8 @@ namespace Yoeca.Sql
                     ? Convert.ConvertFrom(value)
                     : Convert.ConvertFromString(value.ToString());
             }
-            Property.SetMethod.Invoke(target,
-                new[]
-                {
-                    propertyValue
-                });
+
+            return propertyValue;
         }
 
 

@@ -4,7 +4,7 @@ namespace Yoeca.Sql
 {
     public interface ISqlCommand<T> : ISqlCommand
     {
-        [NotNull]
+        [CanBeNull]
         T TranslateRow([NotNull] ISqlFields fields);
     }
 

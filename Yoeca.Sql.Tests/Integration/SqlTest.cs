@@ -63,6 +63,16 @@ namespace Yoeca.Sql.Tests.Integration
 
                 Assert.That(selectResult, Has.Count.EqualTo(1));
                 Assert.That(selectResult[0].Name, Is.EqualTo(peter.Name));
+
+                var maximumAge = Select.From<Player>().Maximum(x => x.Age).ExecuteRead(connection).ToImmutableList();
+
+                Assert.That(maximumAge, Has.Count.EqualTo(1));
+                Assert.That(maximumAge[0], Is.EqualTo(50));
+
+                var minimumAge = Select.From<Player>().Minimum(x => x.Age).ExecuteRead(connection).ToImmutableList();
+
+                Assert.That(minimumAge, Has.Count.EqualTo(1));
+                Assert.That(minimumAge[0], Is.EqualTo(22));
             }
         }
 

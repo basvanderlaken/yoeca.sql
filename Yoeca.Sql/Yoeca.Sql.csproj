@@ -92,6 +92,8 @@
     <Compile Include="ISqlCommand.cs" />
     <Compile Include="Attributes\MaximumSizeAttribute.cs" />
     <Compile Include="Attributes\SqlPrimaryKeyAttribute.cs" />
+    <Compile Include="Operations\SelectValue.cs" />
+    <Compile Include="Operations\ValueOperations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Operations\Select.cs" />
     <Compile Include="SqlCommandExtensions.cs" />

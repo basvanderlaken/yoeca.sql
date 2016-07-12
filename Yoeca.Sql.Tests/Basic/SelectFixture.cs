@@ -31,5 +31,19 @@ namespace Yoeca.Sql.Tests.Basic
             Assert.That(Select<ExtendedTable>.All().WhereEqual(x => x.Identifier, identity).Format(SqlFormat.MySql),
                 Is.EqualTo(result));
         }
+
+        [Test]
+        public void SelectMaximum()
+        {
+            Assert.That(Select.From<SimpleTableWithDouble>().Maximum(x => x.Value).Format(SqlFormat.MySql),
+                Is.EqualTo("SELECT MAX(Value) FROM simple_double"));
+        }
+
+        [Test]
+        public void SelectMinimum()
+        {
+            Assert.That(Select.From<SimpleTableWithDouble>().Minimum(x => x.Value).Format(SqlFormat.MySql),
+                Is.EqualTo("SELECT MIN(Value) FROM simple_double"));
+        }
     }
 }

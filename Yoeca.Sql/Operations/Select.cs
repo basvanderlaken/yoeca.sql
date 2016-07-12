@@ -34,7 +34,6 @@ namespace Yoeca.Sql
             Constraints = constraints;
         }
 
-
         public T TranslateRow(ISqlFields fields)
         {
             var definition = new TableDefinition(typeof(T));
@@ -68,6 +67,22 @@ namespace Yoeca.Sql
         }
 
         [NotNull]
+        public SelectValue<T, TValue> Maximum<TValue>([NotNull] Expression<Func<T, TValue>> expression)
+        {
+            var column = GetColumn(expression);
+
+            return new SelectValue<T, TValue>(Table, column.Name, Constraints, ValueOperations.Maximum);
+        }
+
+        [NotNull]
+        public SelectValue<T, TValue> Minimum<TValue>([NotNull] Expression<Func<T, TValue>> expression)
+        {
+            var column = GetColumn(expression);
+
+            return new SelectValue<T, TValue>(Table, column.Name, Constraints, ValueOperations.Minimum);
+        }
+
+        [NotNull]
         public static Select<T> All()
         {
             var definition = new TableDefinition(typeof(T));
@@ -81,7 +96,21 @@ namespace Yoeca.Sql
             return new Select<T>(definition.Name, parameters.ToImmutableList(), ImmutableList<Where>.Empty);
         }
 
-        public Select<T> WhereEqual<TResult>(Expression<Func<T, TResult>> expression, TResult value)
+        public Select<T> WhereEqual<TResult>([NotNull] Expression<Func<T, TResult>> expression, [NotNull] TResult value)
+        {
+            var column = GetColumn(expression);
+            string formattedValue = column.Convert.ConvertToString(value);
+
+            if (column.RequiresEscaping)
+            {
+                formattedValue = "'" + formattedValue + "'";
+            }
+
+            return new Select<T>(Table, Parameters, Constraints.Add(new WhereEqual(column.Name, formattedValue)));
+        }
+
+        [NotNull]
+        private static ColumnRetriever GetColumn<TResult>([NotNull] Expression<Func<T, TResult>> expression)
         {
             var member = expression.Body as MemberExpression;
 
@@ -92,19 +121,13 @@ namespace Yoeca.Sql
 
             var definition = new TableDefinition(typeof(T));
 
-            var column = definition.Columns.Single(x => x.Name == member.Member.Name);
-
-            string formattedValue = column.Convert.ConvertToString(value);
-
-            if (column.RequiresEscaping)
-            {
-                formattedValue = "'" + formattedValue + "'";
-            }
-
-            return new Select<T>(Table, Parameters, Constraints.Add(new WhereEqual(member.Member.Name, formattedValue)));
+            return definition.Columns.Single(x => x.Name == member.Member.Name);
         }
 
-        public Select<T> WhereNotEqual<TResult>(Expression<Func<T, TResult>> expression, TResult value)
+        [NotNull]
+        public Select<T> WhereNotEqual<TResult>(
+            [NotNull] Expression<Func<T, TResult>> expression,
+            [NotNull] TResult value)
         {
             var member = expression.Body as MemberExpression;
 
