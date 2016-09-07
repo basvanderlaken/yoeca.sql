@@ -41,6 +41,18 @@ Value DOUBLE
         }
 
         [Test]
+        public void SupportForEnums()
+        {
+            const string expected = @"CREATE TABLE enumtable(
+Name VARCHAR(128) NOT NULL, Something INT,
+PRIMARY KEY (Name)
+)";
+            string command = CreateTable.For<EnumTable>().Format(SqlFormat.MySql);
+
+            Assert.That(command, Is.EqualTo(expected));
+        }
+
+        [Test]
         public void SupportForSimpleType()
         {
             const string expected = @"CREATE TABLE Simple(

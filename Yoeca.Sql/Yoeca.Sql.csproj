@@ -72,6 +72,8 @@
     <Compile Include="Converters\DateTimeStringCoverter.cs" />
     <Compile Include="Converters\DoubleColumnConverter.cs" />
     <Compile Include="Converters\DoubleStringCoverter.cs" />
+    <Compile Include="Converters\EnumColumnConverter.cs" />
+    <Compile Include="Converters\EnumIntegerCoverter.cs" />
     <Compile Include="Converters\FailingConverter.cs" />
     <Compile Include="Converters\IntegerColumnConverter.cs" />
     <Compile Include="Converters\ProtoBufferColumnConverter.cs" />
@@ -88,7 +90,6 @@
     <Compile Include="Converters\GuidStringCoverter.cs" />
     <Compile Include="Operations\InsertInto.cs" />
     <Compile Include="Converters\IntegerStringCoverter.cs" />
-    <Compile Include="Converters\IntStringCoverter.cs" />
     <Compile Include="ISqlCommand.cs" />
     <Compile Include="Attributes\MaximumSizeAttribute.cs" />
     <Compile Include="Attributes\SqlPrimaryKeyAttribute.cs" />

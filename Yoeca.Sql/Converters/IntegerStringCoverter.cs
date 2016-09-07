@@ -21,7 +21,7 @@ namespace Yoeca.Sql
             {
                 return 0;
             }
-            return Int32.Parse((string) value);
+            return int.Parse((string) value);
         }
     }
 }

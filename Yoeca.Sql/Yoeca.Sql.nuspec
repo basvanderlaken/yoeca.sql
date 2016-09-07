@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Yoeca.Sql</id>
-    <version>0.0.5</version>
+    <version>0.0.6</version>
     <title>Yoeca.Sql - simple SQL formatter</title>
     <authors>Bas van der Laken</authors>    
     <owners>bas@yoeca.nl</owners>
@@ -14,7 +14,7 @@
     * inserting record
     * select records with simple where clause
     * binary blobs using proto buffers
-    * doubles &amp; date-time
+    * integers, doubles, enums &amp; date-time
     </releaseNotes>
     <copyright>Copyright 2016</copyright>
     <tags>SQL</tags>

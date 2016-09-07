@@ -5,6 +5,7 @@ using System.Linq;
 using MySql.Data.MySqlClient;
 using NUnit.Framework;
 using ProtoBuf;
+using Yoeca.Sql.NUnit;
 
 namespace Yoeca.Sql.Tests.Integration
 {
@@ -104,6 +105,32 @@ namespace Yoeca.Sql.Tests.Integration
                 Assert.That(result[0].Identifier, Is.EqualTo(value.Identifier));
                 Assert.That(result[0].Value.ValueA, Is.EqualTo(value.Value.ValueA));
                 Assert.That(result[0].Value.ValueB, Is.EqualTo(value.Value.ValueB));
+            }
+        }
+
+        [Test]
+        public void VerifyEnumWriteAndRead()
+        {
+            using (var connection = new MySqlConnection(MySqlTestDatabase.ConnectionString))
+            {
+                connection.Open();
+
+                DropTable.For<EnumTable>().TryExecute(connection);
+                CreateTable.For<EnumTable>().Execute(connection);
+
+                var value = new EnumTable
+                {
+                    Name = "Foo",
+                    Something = Something.Second
+                };
+
+                InsertInto.Row(value).Execute(connection);
+
+                var values = Select.From<EnumTable>().WhereEqual(x => x.Name, "Foo").ExecuteRead(connection).ToList();
+
+                Assert.That(values, Has.Count.EqualTo(1));
+                Assert.That(values[0].Something, Is.EqualTo(Something.Second));
+                Assert.That(values[0].Name, Is.EqualTo("Foo"));
             }
         }
 

@@ -62,6 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Basic\CreateTableFixture.cs" />
+    <Compile Include="Basic\EnumTable.cs" />
     <Compile Include="Basic\ExtendedTable.cs" />
     <Compile Include="Basic\InsertIntoFixture.cs" />
     <Compile Include="Basic\SelectFixture.cs" />

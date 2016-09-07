@@ -12,6 +12,7 @@ namespace Yoeca.Sql.Converters
             new StringColumnConverter(),
             new GuidColumnConverter(),
             new IntegerColumnConverter(),
+            new EnumColumnConverter(),
             new DoubleColumnConverter(),
             new ProtoBufferColumnConverter(),
             new DateTimeColumnConverter()
