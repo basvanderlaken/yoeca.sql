@@ -88,6 +88,7 @@
     <Compile Include="Operations\DropTable.cs" />
     <Compile Include="Attributes\FixedSizeAttribute.cs" />
     <Compile Include="Converters\GuidStringCoverter.cs" />
+    <Compile Include="Operations\HasTable.cs" />
     <Compile Include="Operations\InsertInto.cs" />
     <Compile Include="Converters\IntegerStringCoverter.cs" />
     <Compile Include="ISqlCommand.cs" />

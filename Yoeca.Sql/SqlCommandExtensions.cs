@@ -35,6 +35,26 @@ namespace Yoeca.Sql
             }
         }
 
+        public static bool ExecuteCheck(
+            [NotNull] this ISqlCommand<bool> command,
+            [NotNull] MySqlConnection connection)
+        {
+            var formatted = command.Format(SqlFormat.MySql);
+            using (var sqlCommand = new MySqlCommand(formatted, connection))
+            {
+                using (var reader = sqlCommand.ExecuteReader())
+                {
+                    var fields = new MySqlFields(reader);
+                    while (reader.Read())
+                    {
+                        return command.TranslateRow(fields);
+                    }
+                }
+            }
+
+            return false;
+        }
+
         public static bool TryExecute([NotNull] this ISqlCommand command, [NotNull] MySqlConnection connection)
         {
             try
