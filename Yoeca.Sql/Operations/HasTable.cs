@@ -25,7 +25,7 @@ namespace Yoeca.Sql
             {
                 case SqlFormat.MySql:
                     return
-                        $@"SELECT * FROM information_schema.tables WHERE table_name = '{Name}' LIMIT 1";
+                        $@"SELECT * FROM information_schema.tables WHERE table_name = '{Name}'  AND table_schema = DATABASE() LIMIT 1";
                 default:
                     throw new InvalidOperationException("Unsupported SQL format.");
             }
