@@ -33,6 +33,7 @@ namespace Yoeca.Sql
 
     public sealed class WhereNotEqual : Where
     {
+        [NotNull]
         public readonly string Value;
 
         public WhereNotEqual([NotNull] string column, [NotNull] string value)
@@ -44,6 +45,23 @@ namespace Yoeca.Sql
         public override string Format(SqlFormat format)
         {
             return "WHERE " + Column + " <> " + Value;
+        }
+    }
+
+    public sealed class WhereLike : Where
+    {
+        [NotNull]
+        public readonly string Value;
+
+        public WhereLike([NotNull] string column, [NotNull] string value)
+            : base(column)
+        {
+            Value = value;
+        }
+
+        public override string Format(SqlFormat format)
+        {
+            return "WHERE " + Column + " LIKE " + Value;
         }
     }
 }

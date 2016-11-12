@@ -74,7 +74,9 @@
     <Compile Include="Integration\MySqlTestDatabase.cs" />
     <Compile Include="Integration\Payload.cs" />
     <Compile Include="Integration\Player.cs" />
+    <Compile Include="Integration\SqlBaseFixture.cs" />
     <Compile Include="Integration\SqlTest.cs" />
+    <Compile Include="Integration\WhereLikeFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

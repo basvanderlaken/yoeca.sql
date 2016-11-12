@@ -1,23 +1,17 @@
-using MySql.Data.MySqlClient;
 using NUnit.Framework;
 
 namespace Yoeca.Sql.Tests.Integration
 {
     [TestFixture]
-    internal sealed class HasTableFixture
+    internal sealed class HasTableFixture : SqlBaseFixture
     {
         [Test]
         public void VerifyHasTableWorks()
         {
-            using (var connection = new MySqlConnection(MySqlTestDatabase.ConnectionString))
-            {
-                connection.Open();
-
-                DropTable.For<Player>().TryExecute(connection);
-                Assert.That(HasTable.For<Player>().ExecuteCheck(connection), Is.False);
-                CreateTable.For<Player>().Execute(connection);
-                Assert.That(HasTable.For<Player>().ExecuteCheck(connection), Is.True);
-            }
+            DropTable.For<Player>().TryExecute(Connection);
+            Assert.That(HasTable.For<Player>().ExecuteCheck(Connection), Is.False);
+            CreateTable.For<Player>().Execute(Connection);
+            Assert.That(HasTable.For<Player>().ExecuteCheck(Connection), Is.True);
         }
     }
 }

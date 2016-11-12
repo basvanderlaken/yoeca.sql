@@ -102,6 +102,7 @@
     <Compile Include="SqlFormat.cs" />
     <Compile Include="Attributes\SqlNotNullAttribute.cs" />
     <Compile Include="Converters\StringColumnConverter.cs" />
+    <Compile Include="Table.cs" />
     <Compile Include="TableColumn.cs" />
     <Compile Include="TableDefinition.cs" />
     <Compile Include="Operations\Where.cs" />

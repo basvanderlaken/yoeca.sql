@@ -56,6 +56,11 @@ namespace Yoeca.Sql.Tests.Integration
                 Assert.That(selectResult[1].Age, Is.EqualTo(willem.Age));
                 Assert.That(selectResult[1].Birthday, Is.EqualTo(willem.Birthday));
 
+                selectResult = Select.From<Player>().Take(1).ExecuteRead(connection)
+                    .OrderBy(x => x.Name)
+                    .ToImmutableList();
+
+                Assert.That(selectResult, Has.Count.EqualTo(1));
 
                 selectResult = Select.From<Player>()
                     .WhereEqual(x => x.Identifier, peter.Identifier)
