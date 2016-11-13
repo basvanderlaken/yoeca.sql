@@ -66,6 +66,7 @@
   <ItemGroup>
     <Compile Include="Attributes\SqlTableDefinitionAttribute.cs" />
     <Compile Include="ColumnRetriever.cs" />
+    <Compile Include="ConnectionFactory.cs" />
     <Compile Include="Converters\ColumnConverters.cs" />
     <Compile Include="Converters\BinaryConverter.cs" />
     <Compile Include="Converters\DateTimeColumnConverter.cs" />
@@ -81,7 +82,9 @@
     <Compile Include="Converters\GuidColumnConverter.cs" />
     <Compile Include="Converters\IColumnConverter.cs" />
     <Compile Include="Converters\TypeConverterColumnConverter.cs" />
+    <Compile Include="ISqlConnection.cs" />
     <Compile Include="ISqlFields.cs" />
+    <Compile Include="MySql\MySqlImplementation.cs" />
     <Compile Include="Operations\CreateDatabase.cs" />
     <Compile Include="Operations\CreateTable.cs" />
     <Compile Include="DataType.cs" />
@@ -115,6 +118,7 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>ECHO nuget pack Yoeca.sql.nuspec -Prop Configuration=Release

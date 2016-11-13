@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Yoeca.Sql</id>
-    <version>0.0.10</version>
+    <version>0.0.11</version>
     <title>Yoeca.Sql - simple SQL formatter</title>
     <authors>Bas van der Laken</authors>    
     <owners>bas@yoeca.nl</owners>
@@ -16,6 +16,7 @@
     * binary blobs using proto buffers
     * integers, doubles, enums &amp; date-time
     * has table functionality
+    * abstracted MySql implementation
     </releaseNotes>
     <copyright>Copyright 2016</copyright>
     <tags>SQL</tags>
@@ -23,6 +24,7 @@
       <dependency id="System.Collections.Immutable" version="1.2.0" />
       <dependency id="JetBrains.Annotations" version="10.1.5" />
       <dependency id="protobuf-net" version="2.0.0.668" />
+      <dependency id="MySql.Data" version="6.9.8" />    
     </dependencies>
   </metadata>
   <files>
