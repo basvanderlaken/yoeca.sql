@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Yoeca.Sql</id>
-    <version>0.0.11</version>
+    <version>0.0.12</version>
     <title>Yoeca.Sql - simple SQL formatter</title>
     <authors>Bas van der Laken</authors>    
     <owners>bas@yoeca.nl</owners>
@@ -17,6 +17,7 @@
     * integers, doubles, enums &amp; date-time
     * has table functionality
     * abstracted MySql implementation
+    * added MySql UPSERT functionality
     </releaseNotes>
     <copyright>Copyright 2016</copyright>
     <tags>SQL</tags>

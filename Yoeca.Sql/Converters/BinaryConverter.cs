@@ -34,12 +34,12 @@ namespace Yoeca.Sql.Converters
         private static string ByteArrayToHexViaLookup32([NotNull] byte[] bytes)
         {
             var lookup32 = s_Lookup32;
-            var result = new char[bytes.Length*2];
+            var result = new char[bytes.Length * 2];
             for (int i = 0; i < bytes.Length; i++)
             {
                 var val = lookup32[bytes[i]];
-                result[2*i] = (char) val;
-                result[2*i + 1] = (char) (val >> 16);
+                result[2 * i] = (char) val;
+                result[2 * i + 1] = (char) (val >> 16);
             }
             return new string(result);
         }
@@ -80,10 +80,10 @@ namespace Yoeca.Sql.Converters
         public static byte[] StringToByteArray([NotNull] string hex)
         {
             int numberChars = hex.Length;
-            byte[] bytes = new byte[numberChars/2];
+            byte[] bytes = new byte[numberChars / 2];
             for (int i = 0; i < numberChars; i += 2)
             {
-                bytes[i/2] = Convert.ToByte(hex.Substring(i, 2), 16);
+                bytes[i / 2] = Convert.ToByte(hex.Substring(i, 2), 16);
             }
             return bytes;
         }

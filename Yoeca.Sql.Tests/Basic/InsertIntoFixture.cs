@@ -28,6 +28,13 @@ namespace Yoeca.Sql.Tests.Basic
             string command = InsertInto.Row(value).Format(SqlFormat.MySql);
 
             Assert.That(command, Is.EqualTo(expected));
+
+            command = InsertInto.Row(value).UpdateOnDuplicateKey.Format(SqlFormat.MySql);
+
+            string fullExpected = expected + "\r\nON DUPLICATE KEY UPDATE Identifier='" + value.Identifier.ToString("N") +
+                                  "', Name='Foo', Age=10, Payload=x'FF000000'";
+
+            Assert.That(command, Is.EqualTo(fullExpected));
         }
     }
 }

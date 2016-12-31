@@ -71,6 +71,7 @@
     <Compile Include="Basic\SimpleTableWithName.cs" />
     <Compile Include="Integration\HasTableFixture.cs" />
     <Compile Include="Integration\IdentifiedBlob.cs" />
+    <Compile Include="Integration\InsertFixture.cs" />
     <Compile Include="Integration\MySqlTestDatabase.cs" />
     <Compile Include="Integration\Payload.cs" />
     <Compile Include="Integration\Player.cs" />
