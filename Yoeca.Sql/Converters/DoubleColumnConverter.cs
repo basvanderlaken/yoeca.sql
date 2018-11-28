@@ -12,7 +12,7 @@ namespace Yoeca.Sql.Converters
             }
 
             TableColumn column = TableColumn.Double(propertyInfo.Name,
-                TableColumn.HasSqlPrimaryKey(propertyInfo));
+                                                    TableColumn.HasSqlPrimaryKey(propertyInfo));
 
             return new ColumnRetriever(propertyInfo, column, new DoubleStringCoverter(), false);
         }

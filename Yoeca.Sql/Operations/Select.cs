@@ -11,7 +11,8 @@ namespace Yoeca.Sql
     public sealed class Select
     {
         [NotNull]
-        public static Select<T> From<T>() where T : new()
+        public static Select<T> From<T>()
+            where T : new()
         {
             return Select<T>.All();
         }

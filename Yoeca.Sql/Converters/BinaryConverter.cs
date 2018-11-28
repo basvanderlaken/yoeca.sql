@@ -27,6 +27,7 @@ namespace Yoeca.Sql.Converters
                 string s = i.ToString("X2");
                 result[i] = s[0] + ((uint) s[1] << 16);
             }
+
             return result;
         }
 
@@ -41,6 +42,7 @@ namespace Yoeca.Sql.Converters
                 result[2 * i] = (char) val;
                 result[2 * i + 1] = (char) (val >> 16);
             }
+
             return new string(result);
         }
 
@@ -85,6 +87,7 @@ namespace Yoeca.Sql.Converters
             {
                 bytes[i / 2] = Convert.ToByte(hex.Substring(i, 2), 16);
             }
+
             return bytes;
         }
 

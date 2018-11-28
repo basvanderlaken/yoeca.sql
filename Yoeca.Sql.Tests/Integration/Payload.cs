@@ -6,9 +6,17 @@ namespace Yoeca.Sql.Tests.Integration
     public sealed class Payload
     {
         [ProtoMember(1)]
-        public int ValueA { get; set; }
+        public int ValueA
+        {
+            get;
+            set;
+        }
 
         [ProtoMember(2)]
-        public int ValueB { get; set; }
+        public int ValueB
+        {
+            get;
+            set;
+        }
     }
 }

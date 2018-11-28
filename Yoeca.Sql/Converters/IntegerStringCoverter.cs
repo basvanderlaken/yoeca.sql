@@ -21,6 +21,7 @@ namespace Yoeca.Sql.Converters
             {
                 return 0;
             }
+
             return int.Parse((string) value);
         }
     }

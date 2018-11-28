@@ -34,17 +34,20 @@ namespace Yoeca.Sql
             RequiresEscaping = requiresEscaping;
         }
 
-        public bool RequiresEscaping { get; }
+        public bool RequiresEscaping
+        {
+            get;
+        }
 
         public void Set([CanBeNull] object value, [NotNull] object target)
         {
             object propertyValue = GetValue(value);
 
             Property.SetMethod.Invoke(target,
-                new[]
-                {
-                    propertyValue
-                });
+                                      new[]
+                                      {
+                                          propertyValue
+                                      });
         }
 
         [CanBeNull]

@@ -37,8 +37,8 @@ namespace Yoeca.Sql.Tests.Integration
             InsertInto.Row(willem).Execute(Connection);
 
             var selectResult = Select.From<Player>().ExecuteRead(Connection)
-                .OrderBy(x => x.Name)
-                .ToImmutableList();
+                                     .OrderBy(x => x.Name)
+                                     .ToImmutableList();
 
             Assert.That(selectResult, Has.Count.EqualTo(2));
             Assert.That(selectResult[0].Name, Is.EqualTo(peter.Name));
@@ -52,15 +52,15 @@ namespace Yoeca.Sql.Tests.Integration
             Assert.That(selectResult[1].Birthday, Is.EqualTo(willem.Birthday));
 
             selectResult = Select.From<Player>().Take(1).ExecuteRead(Connection)
-                .OrderBy(x => x.Name)
-                .ToImmutableList();
+                                 .OrderBy(x => x.Name)
+                                 .ToImmutableList();
 
             Assert.That(selectResult, Has.Count.EqualTo(1));
 
             selectResult = Select.From<Player>()
-                .WhereEqual(x => x.Identifier, peter.Identifier)
-                .ExecuteRead(Connection)
-                .OrderBy(x => x.Name).ToImmutableList();
+                                 .WhereEqual(x => x.Identifier, peter.Identifier)
+                                 .ExecuteRead(Connection)
+                                 .OrderBy(x => x.Name).ToImmutableList();
 
             Assert.That(selectResult, Has.Count.EqualTo(1));
             Assert.That(selectResult[0].Name, Is.EqualTo(peter.Name));
@@ -140,6 +140,7 @@ namespace Yoeca.Sql.Tests.Integration
 
                 buffer = stream.ToArray();
             }
+
             using (var stream = new MemoryStream(buffer))
             {
                 var otherValue = Serializer.Deserialize<Payload>(stream);

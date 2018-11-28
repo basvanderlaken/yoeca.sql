@@ -6,9 +6,17 @@ namespace Yoeca.Sql.Tests.Integration
     public sealed class IdentifiedBlob
     {
         [SqlPrimaryKey]
-        public Guid Identifier { get; set; }
+        public Guid Identifier
+        {
+            get;
+            set;
+        }
 
         [SqlNotNull]
-        public Payload Value { get; set; }
+        public Payload Value
+        {
+            get;
+            set;
+        }
     }
 }

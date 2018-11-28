@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Immutable;
+using System.Linq;
 using NUnit.Framework;
+using Yoeca.Sql.NUnit;
 
 namespace Yoeca.Sql.Tests.Integration
 {
@@ -38,6 +40,37 @@ namespace Yoeca.Sql.Tests.Integration
             records = Select.From<Player>().ExecuteRead(Connection).ToImmutableList();
             Assert.That(records, Has.Count.EqualTo(1));
             Assert.That(records[0].Name, Is.EqualTo("John"));
+        }
+
+        [Test]
+        public void WhenRecordInsertedWithAutoIncrementIdentityGetsUpdated()
+        {
+            DropTable.For<TableWithIncrement>().TryExecute(Connection);
+            CreateTable.For<TableWithIncrement>().Execute(Connection);
+
+            var first = new TableWithIncrement
+            {
+                Value = "Foo"
+            };
+
+            var second = new TableWithIncrement
+            {
+                Value = "Bar"
+            };
+
+            var numberFirst = InsertInto.Row(first).GetLastInsertIdentity<ulong>().ExecuteRead(Connection).Single();
+            var numberSecond = InsertInto.Row(second).GetLastInsertIdentity<ulong>().ExecuteRead(Connection).Single();
+
+            Assert.That(numberFirst, Is.EqualTo(1));
+            Assert.That(numberSecond, Is.EqualTo(2));
+
+            var firstSelected = Select.From<TableWithIncrement>().WhereEqual(x => x.Identifier, 1UL)
+                                      .ExecuteRead(Connection)
+                                      .SingleOrDefault();
+
+            Assert.IsNotNull(firstSelected);
+            Assert.That(firstSelected.Identifier, Is.EqualTo(1UL));
+            Assert.That(firstSelected.Value, Is.EqualTo("Foo"));
         }
     }
 }

@@ -3,6 +3,10 @@
     [SqlTableDefinition("simple_double")]
     internal sealed class SimpleTableWithDouble
     {
-        public double Value { get; set; }
+        public double Value
+        {
+            get;
+            set;
+        }
     }
 }

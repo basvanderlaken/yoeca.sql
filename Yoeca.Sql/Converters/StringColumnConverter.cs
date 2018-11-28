@@ -28,9 +28,9 @@ namespace Yoeca.Sql.Converters
             if (fixedSize != -1)
             {
                 return TableColumn.FixedText(property.Name,
-                    fixedSize,
-                    TableColumn.HasSqlNotNull(property),
-                    TableColumn.HasSqlPrimaryKey(property));
+                                             fixedSize,
+                                             TableColumn.HasSqlNotNull(property),
+                                             TableColumn.HasSqlPrimaryKey(property));
             }
 
             int maximumSize = TableColumn.GetMaximumSize(property);
@@ -38,14 +38,14 @@ namespace Yoeca.Sql.Converters
             if (maximumSize != -1)
             {
                 return TableColumn.VariableText(property.Name,
-                    TableColumn.HasSqlNotNull(property),
-                    TableColumn.HasSqlPrimaryKey(property),
-                    maximumSize);
+                                                TableColumn.HasSqlNotNull(property),
+                                                TableColumn.HasSqlPrimaryKey(property),
+                                                maximumSize);
             }
 
             return TableColumn.VariableText(property.Name,
-                TableColumn.HasSqlNotNull(property),
-                TableColumn.HasSqlPrimaryKey(property));
+                                            TableColumn.HasSqlNotNull(property),
+                                            TableColumn.HasSqlPrimaryKey(property));
         }
     }
 }

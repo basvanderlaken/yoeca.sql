@@ -19,8 +19,8 @@ namespace Yoeca.Sql.Converters
                 var binaryConverter = new BinaryConverter(converter);
 
                 var column = TableColumn.Blob(propertyInfo.Name,
-                    TableColumn.HasSqlNotNull(propertyInfo),
-                    TableColumn.HasSqlPrimaryKey(propertyInfo));
+                                              TableColumn.HasSqlNotNull(propertyInfo),
+                                              TableColumn.HasSqlPrimaryKey(propertyInfo));
 
                 return new ColumnRetriever(propertyInfo, column, binaryConverter, false);
             }

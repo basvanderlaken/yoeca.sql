@@ -21,6 +21,7 @@ namespace Yoeca.Sql.Converters
             {
                 return Guid.Empty;
             }
+
             return Guid.Parse((string) value);
         }
     }

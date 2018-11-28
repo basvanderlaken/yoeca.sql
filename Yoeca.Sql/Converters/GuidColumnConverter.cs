@@ -13,9 +13,9 @@ namespace Yoeca.Sql.Converters
             }
 
             TableColumn column = TableColumn.FixedText(propertyInfo.Name,
-                32,
-                true,
-                TableColumn.HasSqlPrimaryKey(propertyInfo));
+                                                       32,
+                                                       true,
+                                                       TableColumn.HasSqlPrimaryKey(propertyInfo));
 
             return new ColumnRetriever(propertyInfo, column, new GuidStringCoverter(), true);
         }

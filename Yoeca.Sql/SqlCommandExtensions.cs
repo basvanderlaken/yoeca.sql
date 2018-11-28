@@ -30,7 +30,7 @@ namespace Yoeca.Sql
             [NotNull] this ISqlCommand<bool> command,
             [NotNull] ISqlConnection connection)
         {
-            return connection.ExecuteCheck(command);
+            return connection.ExecuteSingle(command);
         }
 
         [NotNull]
@@ -38,7 +38,7 @@ namespace Yoeca.Sql
             [NotNull] this ISqlCommand<bool> command,
             [NotNull] ISqlConnection connection)
         {
-            return connection.ExecuteCheckAsync(command);
+            return connection.ExecuteSingleAsync(command);
         }
 
         public static bool TryExecute([NotNull] this ISqlCommand command, [NotNull] ISqlConnection connection)

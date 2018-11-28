@@ -12,7 +12,9 @@ namespace Yoeca.Sql.Converters
             }
 
             var converter = new IntegerStringCoverter();
-            var column = TableColumn.Integer(propertyInfo.Name, TableColumn.HasSqlPrimaryKey(propertyInfo));
+            var column = TableColumn.Integer(propertyInfo.Name,
+                                             TableColumn.HasSqlPrimaryKey(propertyInfo),
+                                             TableColumn.HasAutoIncrement(propertyInfo));
 
             return new ColumnRetriever(propertyInfo, column, converter, false);
         }

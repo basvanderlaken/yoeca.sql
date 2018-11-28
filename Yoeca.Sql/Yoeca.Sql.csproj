@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Yoeca.Sql</RootNamespace>
     <AssemblyName>Yoeca.Sql</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -42,28 +42,39 @@
     <AssemblyOriginatorKeyFile>Yoeca Key.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="JetBrains.Annotations, Version=10.1.5.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
-      <HintPath>..\packages\JetBrains.Annotations.10.1.5\lib\net\JetBrains.Annotations.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Google.Protobuf, Version=3.6.1.0, Culture=neutral, PublicKeyToken=a7d26565bac4d604, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Protobuf.3.6.1\lib\net45\Google.Protobuf.dll</HintPath>
     </Reference>
-    <Reference Include="MySql.Data, Version=6.9.8.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\MySql.Data.6.9.8\lib\net45\MySql.Data.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="JetBrains.Annotations, Version=2018.2.1.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.Annotations.2018.2.1\lib\net20\JetBrains.Annotations.dll</HintPath>
     </Reference>
-    <Reference Include="protobuf-net, Version=2.0.0.668, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
-      <HintPath>..\packages\protobuf-net.2.0.0.668\lib\net40\protobuf-net.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="MySql.Data, Version=8.0.13.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <HintPath>..\packages\MySql.Data.8.0.13\lib\net452\MySql.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="protobuf-net, Version=2.4.0.0, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
+      <HintPath>..\packages\protobuf-net.2.4.0\lib\net40\protobuf-net.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Collections.Immutable, Version=1.2.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Collections.Immutable.1.2.0\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="System.Collections.Immutable, Version=1.2.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Collections.Immutable.1.5.0\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
     </Reference>
+    <Reference Include="System.ComponentModel" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Drawing.Design" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\AutoIncrement.cs" />
     <Compile Include="Attributes\SqlTableDefinitionAttribute.cs" />
     <Compile Include="ColumnRetriever.cs" />
     <Compile Include="ConnectionFactory.cs" />
@@ -77,11 +88,15 @@
     <Compile Include="Converters\EnumIntegerCoverter.cs" />
     <Compile Include="Converters\FailingConverter.cs" />
     <Compile Include="Converters\IntegerColumnConverter.cs" />
+    <Compile Include="Converters\LongColumnConverter.cs" />
+    <Compile Include="Converters\LongStringCoverter.cs" />
     <Compile Include="Converters\ProtoBufferColumnConverter.cs" />
     <Compile Include="Converters\ProtoBufferConverter.cs" />
     <Compile Include="Converters\GuidColumnConverter.cs" />
     <Compile Include="Converters\IColumnConverter.cs" />
     <Compile Include="Converters\TypeConverterColumnConverter.cs" />
+    <Compile Include="Converters\UnsignedLongColumnConverter.cs" />
+    <Compile Include="Converters\UnsignedLongStringCoverter.cs" />
     <Compile Include="ISqlConnection.cs" />
     <Compile Include="ISqlFields.cs" />
     <Compile Include="MySql\MySqlImplementation.cs" />

@@ -8,15 +8,31 @@ namespace Yoeca.Sql.NUnit
     internal sealed class ExtendedTable
     {
         [SqlPrimaryKey]
-        public Guid Identifier { get; set; }
+        public Guid Identifier
+        {
+            get;
+            set;
+        }
 
         [SqlNotNull, MaximumSize(128)]
-        public string Name { get; set; }
+        public string Name
+        {
+            get;
+            set;
+        }
 
-        public int Age { get; set; }
+        public int Age
+        {
+            get;
+            set;
+        }
 
         [SqlNotNull, MaximumSize(8192), TypeConverter(typeof(SomeOtherClassConverter))]
-        public SomeOtherClass Payload { get; set; }
+        public SomeOtherClass Payload
+        {
+            get;
+            set;
+        }
     }
 
     internal sealed class SomeOtherClassConverter : TypeConverter
@@ -58,6 +74,10 @@ namespace Yoeca.Sql.NUnit
 
     internal sealed class SomeOtherClass
     {
-        public int Content { get; set; }
+        public int Content
+        {
+            get;
+            set;
+        }
     }
 }

@@ -17,19 +17,27 @@ namespace Yoeca.Sql
         public readonly bool PrimaryKey;
         public readonly int Size;
 
-        private TableColumn(DataType dataType, int size, [NotNull] string name, bool notNull, bool primaryKey)
+        /// <summary>
+        /// Flag indicating the column will be auto-incremented by the database.
+        /// </summary>
+        /// <seealso cref="AutoIncrementAttribute"/>
+        public readonly bool AutoIncrement;
+
+        private TableColumn(DataType dataType, int size, [NotNull] string name, bool notNull, bool primaryKey,
+                            bool autoIncrement)
         {
             DataType = dataType;
             Size = size;
             Name = name;
             NotNull = notNull;
             PrimaryKey = primaryKey;
+            AutoIncrement = autoIncrement;
         }
 
         [NotNull]
         public static TableColumn FixedText([NotNull] string name, int size, bool notNull, bool primaryKey)
         {
-            return new TableColumn(DataType.FixedText, size, name, notNull, primaryKey);
+            return new TableColumn(DataType.FixedText, size, name, notNull, primaryKey, false);
         }
 
         [NotNull]
@@ -37,33 +45,40 @@ namespace Yoeca.Sql
             [NotNull] string name,
             bool notNull,
             bool primaryKey,
-            int maximumSize = 0)
+            int maximumSize = 0
+        )
         {
-            return new TableColumn(DataType.VariableText, maximumSize, name, notNull, primaryKey);
+            return new TableColumn(DataType.VariableText, maximumSize, name, notNull, primaryKey, false);
         }
 
         [NotNull]
-        public static TableColumn Integer([NotNull] string name, bool primaryKey)
+        public static TableColumn Integer([NotNull] string name, bool primaryKey, bool autoIncrement = false)
         {
-            return new TableColumn(DataType.Integer, 0, name, false, primaryKey);
+            return new TableColumn(DataType.Integer, 0, name, false, primaryKey, autoIncrement);
         }
 
         [NotNull]
-        public static TableColumn Long([NotNull] string name, bool primaryKey)
+        public static TableColumn Long([NotNull] string name, bool primaryKey, bool autoIncrement = false)
         {
-            return new TableColumn(DataType.Long, 0, name, false, primaryKey);
+            return new TableColumn(DataType.Long, 0, name, false, primaryKey, autoIncrement);
+        }
+
+        [NotNull]
+        public static TableColumn UnsignedLong([NotNull] string name, bool primaryKey, bool autoIncrement = false)
+        {
+            return new TableColumn(DataType.UnsignedLong, 0, name, false, primaryKey, autoIncrement);
         }
 
         [NotNull]
         public static TableColumn Blob([NotNull] string name, bool notNull, bool primaryKey)
         {
-            return new TableColumn(DataType.Binary, 0, name, notNull, primaryKey);
+            return new TableColumn(DataType.Binary, 0, name, notNull, primaryKey, false);
         }
 
         [NotNull]
         public static TableColumn Double([NotNull] string name, bool hasSqlPrimaryKey)
         {
-            return new TableColumn(DataType.Double, 0, name, false, hasSqlPrimaryKey);
+            return new TableColumn(DataType.Double, 0, name, false, hasSqlPrimaryKey, false);
         }
 
 
@@ -77,6 +92,11 @@ namespace Yoeca.Sql
                 result += " NOT NULL";
             }
 
+            if (AutoIncrement)
+            {
+                result += " AUTO_INCREMENT";
+            }
+
             return result;
         }
 
@@ -86,32 +106,38 @@ namespace Yoeca.Sql
             switch (DataType)
             {
                 case DataType.FixedText:
-                    return string.Format("{0} CHAR({1})", Name, Size);
+                    return $"{Name} CHAR({Size})";
                 case DataType.VariableText:
                     if (Size > 0 && Size <= 255)
                     {
-                        return string.Format("{0} VARCHAR({1})", Name, Size);
+                        return $"{Name} VARCHAR({Size})";
                     }
-                    return string.Format("{0} TEXT", Name);
+
+                    return $"{Name} TEXT";
                 case DataType.Integer:
-                    return string.Format("{0} INT", Name);
+                    return $"{Name} INT SIGNED";
+                case DataType.UnsignedInteger:
+                    return $"{Name} INT UNSIGNED";
                 case DataType.Double:
-                    return string.Format("{0} DOUBLE", Name);
+                    return $"{Name} DOUBLE";
                 case DataType.Long:
-                    return string.Format("{0} BIGINT", Name);
+                    return $"{Name} BIGINT SIGNED";
+                case DataType.UnsignedLong:
+                    return $"{Name} BIGINT UNSIGNED";
                 case DataType.Binary:
                     if (Size > 16777215)
                     {
-                        return string.Format("{0} LONGBLOB", Name);
-                    }
-                    if (Size > 65535)
-                    {
-                        return string.Format("{0} MEDIUMBLOB", Name);
+                        return $"{Name} LONGBLOB";
                     }
 
-                    return string.Format("{0} BLOB", Name);
+                    if (Size > 65535)
+                    {
+                        return $"{Name} MEDIUMBLOB";
+                    }
+
+                    return $"{Name} BLOB";
                 default:
-                    throw new NotSupportedException("Specified datatype is not supported: " + DataType);
+                    throw new NotSupportedException("Specified data type is not supported: " + DataType);
             }
         }
 
@@ -137,6 +163,11 @@ namespace Yoeca.Sql
         public static bool HasSqlPrimaryKey([NotNull] PropertyInfo property)
         {
             return Attribute.GetCustomAttributes(property, typeof(SqlPrimaryKeyAttribute)).Any();
+        }
+
+        public static bool HasAutoIncrement([NotNull] PropertyInfo property)
+        {
+            return Attribute.GetCustomAttributes(property, typeof(AutoIncrementAttribute)).Any();
         }
 
         [NotNull]

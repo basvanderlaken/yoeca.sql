@@ -31,6 +31,7 @@ namespace Yoeca.Sql.Converters
             {
                 throw new InvalidOperationException("Unable to deserialize.");
             }
+
             var stream = new MemoryStream(bytes);
             stream.Seek(0, SeekOrigin.Begin);
             return Serializer.Deserialize<TContract>(stream);

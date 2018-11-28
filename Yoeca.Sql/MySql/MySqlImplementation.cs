@@ -64,7 +64,7 @@ namespace Yoeca.Sql.MySql
             }
         }
 
-        public bool ExecuteCheck(ISqlCommand<bool> command)
+        public T ExecuteSingle<T>(ISqlCommand<T> command)
         {
             var formatted = command.Format(SqlFormat.MySql);
             using (var connection = Open())
@@ -82,10 +82,10 @@ namespace Yoeca.Sql.MySql
                 }
             }
 
-            return false;
+            return default(T);
         }
 
-        public async Task<bool> ExecuteCheckAsync(ISqlCommand<bool> command)
+        public async Task<T> ExecuteSingleAsync<T>(ISqlCommand<T> command)
         {
             var formatted = command.Format(SqlFormat.MySql);
             using (var connection = Open())
@@ -103,13 +103,14 @@ namespace Yoeca.Sql.MySql
                 }
             }
 
-            return false;
+            return default(T);
         }
 
         [NotNull]
         private MySqlConnection Open()
         {
             var connection = new MySqlConnection(m_ConnectionString);
+
             connection.Open();
             return connection;
         }

@@ -18,15 +18,15 @@ namespace Yoeca.Sql.Converters
 
             bool requiresEscape = true;
             var column = TableColumn.VariableText(propertyInfo.Name,
-                TableColumn.HasSqlNotNull(propertyInfo),
-                TableColumn.HasSqlPrimaryKey(propertyInfo));
+                                                  TableColumn.HasSqlNotNull(propertyInfo),
+                                                  TableColumn.HasSqlPrimaryKey(propertyInfo));
 
             if (converter is BinaryConverter)
             {
                 requiresEscape = false;
                 column = TableColumn.Blob(propertyInfo.Name,
-                    TableColumn.HasSqlNotNull(propertyInfo),
-                    TableColumn.HasSqlPrimaryKey(propertyInfo));
+                                          TableColumn.HasSqlNotNull(propertyInfo),
+                                          TableColumn.HasSqlPrimaryKey(propertyInfo));
             }
 
             return new ColumnRetriever(propertyInfo, column, converter, requiresEscape);

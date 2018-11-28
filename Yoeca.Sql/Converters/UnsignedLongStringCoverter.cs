@@ -4,7 +4,7 @@ using System.Globalization;
 
 namespace Yoeca.Sql.Converters
 {
-    internal class DoubleStringCoverter : StringConverter
+    internal class UnsignedLongStringCoverter : StringConverter
     {
         public override object ConvertTo(
             ITypeDescriptorContext context,
@@ -12,17 +12,17 @@ namespace Yoeca.Sql.Converters
             object value,
             Type destinationType)
         {
-            return ((int) value).ToString("G17", CultureInfo.InvariantCulture);
+            return ((ulong) value).ToString(CultureInfo.InvariantCulture);
         }
 
         public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
         {
             if (value == null)
             {
-                return 0.0D;
+                return 0UL;
             }
 
-            return double.Parse((string) value);
+            return ulong.Parse((string) value);
         }
     }
 }

@@ -11,12 +11,14 @@ namespace Yoeca.Sql
         [NotNull]
         Task ExecuteAsync([NotNull] ISqlCommand command);
 
+
         [NotNull, ItemNotNull]
         IEnumerable<T> ExecuteRead<T>([NotNull] ISqlCommand<T> command);
 
-        bool ExecuteCheck([NotNull] ISqlCommand<bool> command);
+        [CanBeNull]
+        T ExecuteSingle<T>([NotNull] ISqlCommand<T> command);
 
-        [NotNull]
-        Task<bool> ExecuteCheckAsync([NotNull] ISqlCommand<bool> command);
+        [NotNull, ItemCanBeNull]
+        Task<T> ExecuteSingleAsync<T>([NotNull] ISqlCommand<T> command);
     }
 }

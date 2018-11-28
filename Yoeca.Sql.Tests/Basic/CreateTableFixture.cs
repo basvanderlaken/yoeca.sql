@@ -10,7 +10,7 @@ namespace Yoeca.Sql.Tests.Basic
         public void SupportForBasicTypes()
         {
             const string expected = @"CREATE TABLE Extended(
-Identifier CHAR(32) NOT NULL, Name VARCHAR(128) NOT NULL, Age INT, Payload BLOB NOT NULL,
+Identifier CHAR(32) NOT NULL, Name VARCHAR(128) NOT NULL, Age INT SIGNED, Payload BLOB NOT NULL,
 PRIMARY KEY (Identifier)
 )";
             string command = CreateTable.For<ExtendedTable>().Format(SqlFormat.MySql);
@@ -22,7 +22,7 @@ PRIMARY KEY (Identifier)
         public void SupportForDatetime()
         {
             const string expected = @"CREATE TABLE simple_datetime(
-Value BIGINT
+Value BIGINT SIGNED
 )";
             string command = CreateTable.For<SimpleTableWithDateTime>().Format(SqlFormat.MySql);
 
@@ -44,7 +44,7 @@ Value DOUBLE
         public void SupportForEnums()
         {
             const string expected = @"CREATE TABLE enumtable(
-Name VARCHAR(128) NOT NULL, Something INT,
+Name VARCHAR(128) NOT NULL, Something INT SIGNED,
 PRIMARY KEY (Name)
 )";
             string command = CreateTable.For<EnumTable>().Format(SqlFormat.MySql);

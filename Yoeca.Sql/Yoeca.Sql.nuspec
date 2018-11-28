@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Yoeca.Sql</id>
-    <version>0.0.12</version>
+    <version>0.0.14</version>
     <title>Yoeca.Sql - simple SQL formatter</title>
     <authors>Bas van der Laken</authors>    
     <owners>bas@yoeca.nl</owners>
@@ -22,10 +22,10 @@
     <copyright>Copyright 2016</copyright>
     <tags>SQL</tags>
     <dependencies>
-      <dependency id="System.Collections.Immutable" version="1.2.0" />
-      <dependency id="JetBrains.Annotations" version="10.1.5" />
-      <dependency id="protobuf-net" version="2.0.0.668" />
-      <dependency id="MySql.Data" version="6.9.8" />    
+      <dependency id="System.Collections.Immutable" version="1.5.0" />
+      <dependency id="JetBrains.Annotations" version="2018.2.1" />
+      <dependency id="protobuf-net" version="2.4.0" />
+      <dependency id="MySql.Data" version="8.0.13" />    
     </dependencies>
   </metadata>
   <files>

@@ -31,10 +31,26 @@ namespace Yoeca.Sql.Tests.Basic
 
             command = InsertInto.Row(value).UpdateOnDuplicateKey.Format(SqlFormat.MySql);
 
-            string fullExpected = expected + "\r\nON DUPLICATE KEY UPDATE Identifier='" + value.Identifier.ToString("N") +
+            string fullExpected = expected + "\r\nON DUPLICATE KEY UPDATE Identifier='" +
+                                  value.Identifier.ToString("N") +
                                   "', Name='Foo', Age=10, Payload=x'FF000000'";
 
             Assert.That(command, Is.EqualTo(fullExpected));
+        }
+
+        [Test]
+        public void SupportForAutoIncrement()
+        {
+            var value = new TableWithIncrement
+            {
+                Value = "Foo"
+            };
+
+            string expected =
+                $"INSERT INTO with_autoincrement (Value) VALUES ('Foo');{Environment.NewLine}SELECT LAST_INSERT_ID();";
+            string command = InsertInto.Row(value).GetLastInsertIdentity<long>().Format(SqlFormat.MySql);
+
+            Assert.That(command, Is.EqualTo(expected));
         }
     }
 }
