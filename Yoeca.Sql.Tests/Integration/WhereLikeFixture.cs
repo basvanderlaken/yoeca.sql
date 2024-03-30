@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
 using NUnit.Framework;
 
 namespace Yoeca.Sql.Tests.Integration
@@ -9,8 +8,7 @@ namespace Yoeca.Sql.Tests.Integration
     [TestFixture]
     internal sealed class WhereLikeFixture : SqlBaseFixture
     {
-        [NotNull]
-        private Player Create([NotNull] string name)
+        private Player Create(string name)
         {
             return new Player
             {

@@ -7,22 +7,27 @@ namespace Yoeca.Sql.Converters
     internal class GuidStringCoverter : StringConverter
     {
         public override object ConvertTo(
-            ITypeDescriptorContext context,
-            CultureInfo culture,
-            object value,
+            ITypeDescriptorContext? context,
+            CultureInfo? culture,
+            object? value,
             Type destinationType)
         {
-            return ((Guid) value).ToString("N");
-        }
-
-        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
-        {
-            if (value == null)
+            if (value is Guid valueGuid)
             {
-                return Guid.Empty;
+                return valueGuid.ToString("N");
             }
 
-            return Guid.Parse((string) value);
+            return string.Empty;
+        }
+
+        public override object ConvertFrom(ITypeDescriptorContext? context, CultureInfo? culture, object value)
+        {
+            if (value is string stringValue)
+            {
+                return Guid.Parse(stringValue);
+            }
+
+            return Guid.Empty; ;
         }
     }
 }

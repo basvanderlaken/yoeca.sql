@@ -4,7 +4,7 @@ namespace Yoeca.Sql.Converters
 {
     internal sealed class LongColumnConverter : IColumnConverter
     {
-        public ColumnRetriever TryGet(PropertyInfo propertyInfo)
+        public ColumnRetriever? TryGet(PropertyInfo propertyInfo)
         {
             if (propertyInfo.PropertyType != typeof(long))
             {

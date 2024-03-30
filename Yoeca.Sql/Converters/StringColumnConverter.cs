@@ -1,12 +1,11 @@
 using System.ComponentModel;
 using System.Reflection;
-using JetBrains.Annotations;
 
 namespace Yoeca.Sql.Converters
 {
     internal sealed class StringColumnConverter : IColumnConverter
     {
-        public ColumnRetriever TryGet(PropertyInfo propertyInfo)
+        public ColumnRetriever? TryGet(PropertyInfo propertyInfo)
         {
             if (propertyInfo.PropertyType != typeof(string))
             {
@@ -20,8 +19,7 @@ namespace Yoeca.Sql.Converters
             return new ColumnRetriever(propertyInfo, column, converter, true);
         }
 
-        [NotNull]
-        private static TableColumn GetColumn([NotNull] PropertyInfo property)
+        private static TableColumn GetColumn( PropertyInfo property)
         {
             int fixedSize = TableColumn.GetFixedSize(property);
 

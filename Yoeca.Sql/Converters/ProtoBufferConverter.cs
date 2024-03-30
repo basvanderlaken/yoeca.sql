@@ -18,12 +18,12 @@ namespace Yoeca.Sql.Converters
             }
         }
 
-        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+        public override bool CanConvertFrom(ITypeDescriptorContext? context, Type sourceType)
         {
             return sourceType == typeof(byte[]);
         }
 
-        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+        public override object? ConvertFrom(ITypeDescriptorContext? context, CultureInfo? culture, object value)
         {
             var bytes = value as byte[];
 
@@ -37,13 +37,14 @@ namespace Yoeca.Sql.Converters
             return Serializer.Deserialize<TContract>(stream);
         }
 
-        public override object ConvertTo(
-            ITypeDescriptorContext context,
-            CultureInfo culture,
-            object value,
+        public override object? ConvertTo(
+            ITypeDescriptorContext? context,
+            CultureInfo? culture,
+            object? value,
             Type destinationType)
         {
-            TContract valueAsResult = value as TContract;
+            
+            TContract? valueAsResult = value as TContract;
             if (valueAsResult == null || destinationType != typeof(byte[]))
             {
                 return base.ConvertTo(context, culture, value, destinationType);

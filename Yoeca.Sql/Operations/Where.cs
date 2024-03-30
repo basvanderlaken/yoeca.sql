@@ -1,4 +1,4 @@
-using JetBrains.Annotations;
+
 
 namespace Yoeca.Sql
 {
@@ -11,7 +11,7 @@ namespace Yoeca.Sql
             Column = column;
         }
 
-        [NotNull]
+        
         public abstract string Format(SqlFormat format);
     }
 
@@ -19,7 +19,7 @@ namespace Yoeca.Sql
     {
         public readonly string Value;
 
-        public WhereEqual([NotNull] string column, [NotNull] string value)
+        public WhereEqual( string column,  string value)
             : base(column)
         {
             Value = value;
@@ -33,10 +33,10 @@ namespace Yoeca.Sql
 
     public sealed class WhereNotEqual : Where
     {
-        [NotNull]
+        
         public readonly string Value;
 
-        public WhereNotEqual([NotNull] string column, [NotNull] string value)
+        public WhereNotEqual( string column,  string value)
             : base(column)
         {
             Value = value;
@@ -50,10 +50,10 @@ namespace Yoeca.Sql
 
     public sealed class WhereLike : Where
     {
-        [NotNull]
+        
         public readonly string Value;
 
-        public WhereLike([NotNull] string column, [NotNull] string value)
+        public WhereLike( string column,  string value)
             : base(column)
         {
             Value = value;

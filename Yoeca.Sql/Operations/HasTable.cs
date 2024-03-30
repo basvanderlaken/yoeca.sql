@@ -1,15 +1,13 @@
 using System;
 using System.Linq;
-using JetBrains.Annotations;
 
 namespace Yoeca.Sql
 {
     public sealed class HasTable : ISqlCommand<bool>
     {
-        [NotNull]
         public readonly string Name;
 
-        private HasTable([NotNull] string name)
+        private HasTable(string name)
         {
             Name = name;
         }
@@ -31,7 +29,6 @@ namespace Yoeca.Sql
             }
         }
 
-        [NotNull]
         public static HasTable For<T>()
         {
             var type = typeof(T);

@@ -68,7 +68,7 @@ namespace Yoeca.Sql.Tests.Integration
                                       .ExecuteRead(Connection)
                                       .SingleOrDefault();
 
-            Assert.IsNotNull(firstSelected);
+            Assert.That(firstSelected, Is.Not.Null);
             Assert.That(firstSelected.Identifier, Is.EqualTo(1UL));
             Assert.That(firstSelected.Value, Is.EqualTo("Foo"));
         }

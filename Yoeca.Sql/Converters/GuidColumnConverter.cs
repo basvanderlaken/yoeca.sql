@@ -5,7 +5,7 @@ namespace Yoeca.Sql.Converters
 {
     internal sealed class GuidColumnConverter : IColumnConverter
     {
-        public ColumnRetriever TryGet(PropertyInfo propertyInfo)
+        public ColumnRetriever? TryGet(PropertyInfo propertyInfo)
         {
             if (propertyInfo.PropertyType != typeof(Guid))
             {

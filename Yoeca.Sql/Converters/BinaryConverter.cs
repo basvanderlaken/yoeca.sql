@@ -1,24 +1,20 @@
 using System;
 using System.ComponentModel;
 using System.Globalization;
-using JetBrains.Annotations;
 
 namespace Yoeca.Sql.Converters
 {
     internal sealed class BinaryConverter : TypeConverter
     {
-        [NotNull]
         private static readonly uint[] s_Lookup32 = CreateLookup32();
 
-        [NotNull]
         private readonly TypeConverter m_InternalConverter;
 
-        public BinaryConverter([NotNull] TypeConverter internalConverter)
+        public BinaryConverter(TypeConverter internalConverter)
         {
             m_InternalConverter = internalConverter;
         }
 
-        [NotNull]
         private static uint[] CreateLookup32()
         {
             var result = new uint[256];
@@ -31,8 +27,7 @@ namespace Yoeca.Sql.Converters
             return result;
         }
 
-        [NotNull]
-        private static string ByteArrayToHexViaLookup32([NotNull] byte[] bytes)
+        private static string ByteArrayToHexViaLookup32(byte[] bytes)
         {
             var lookup32 = s_Lookup32;
             var result = new char[bytes.Length * 2];
@@ -46,12 +41,12 @@ namespace Yoeca.Sql.Converters
             return new string(result);
         }
 
-        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+        public override bool CanConvertFrom(ITypeDescriptorContext? context, Type sourceType)
         {
             return sourceType == typeof(string) || sourceType == typeof(byte[]);
         }
 
-        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+        public override object? ConvertFrom(ITypeDescriptorContext? context, CultureInfo? culture, object value)
         {
             if (value == null)
             {
@@ -77,9 +72,8 @@ namespace Yoeca.Sql.Converters
 
             throw new NotSupportedException("Unable to convert binary data.");
         }
-
-        [NotNull]
-        public static byte[] StringToByteArray([NotNull] string hex)
+        
+        public static byte[] StringToByteArray(string hex)
         {
             int numberChars = hex.Length;
             byte[] bytes = new byte[numberChars / 2];
@@ -91,13 +85,12 @@ namespace Yoeca.Sql.Converters
             return bytes;
         }
 
-        public override object ConvertTo(
-            [NotNull] ITypeDescriptorContext context,
-            [NotNull] CultureInfo culture,
-            [NotNull] object value,
+        public override object? ConvertTo(ITypeDescriptorContext? context,
+            CultureInfo? culture,
+            object? value,
             Type destinationType)
         {
-            object result = m_InternalConverter.ConvertTo(value, typeof(byte[]));
+            object? result = m_InternalConverter.ConvertTo(value, typeof(byte[]));
 
             var bytes = result as byte[];
             if (bytes != null)

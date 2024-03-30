@@ -6,33 +6,38 @@ namespace Yoeca.Sql.Converters
 {
     internal sealed class DateTimeStringCoverter : StringConverter
     {
-        public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
+        public override bool CanConvertTo(ITypeDescriptorContext? context, Type? destinationType)
         {
             return destinationType == typeof(DateTime);
         }
 
-        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+        public override bool CanConvertFrom(ITypeDescriptorContext? context, Type sourceType)
         {
             return sourceType == typeof(string) || sourceType == typeof(long);
         }
 
-        public override object ConvertTo(
-            ITypeDescriptorContext context,
-            CultureInfo culture,
-            object value,
+        public override object? ConvertTo(
+            ITypeDescriptorContext? context,
+            CultureInfo? culture,
+            object? value,
             Type destinationType)
         {
-            var dateTime = (DateTime) value;
-
-            if (dateTime.Kind != DateTimeKind.Utc)
+            if (value is DateTime dateTime)
             {
-                dateTime = dateTime.ToUniversalTime();
+
+
+                if (dateTime.Kind != DateTimeKind.Utc)
+                {
+                    dateTime = dateTime.ToUniversalTime();
+                }
+
+                return dateTime.Ticks.ToString(CultureInfo.InvariantCulture);
             }
 
-            return dateTime.Ticks.ToString(CultureInfo.InvariantCulture);
+            return null;
         }
 
-        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+        public override object ConvertFrom(ITypeDescriptorContext? context, CultureInfo? culture, object value)
         {
             if (value == null)
             {

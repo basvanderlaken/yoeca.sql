@@ -7,15 +7,20 @@ namespace Yoeca.Sql.Converters
     internal class UnsignedLongStringCoverter : StringConverter
     {
         public override object ConvertTo(
-            ITypeDescriptorContext context,
-            CultureInfo culture,
-            object value,
+            ITypeDescriptorContext? context,
+            CultureInfo? culture,
+            object? value,
             Type destinationType)
         {
-            return ((ulong) value).ToString(CultureInfo.InvariantCulture);
+            if (value is ulong longValue)
+            {
+                return longValue.ToString(CultureInfo.InvariantCulture);
+            }
+            
+            return string.Empty;
         }
 
-        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+        public override object ConvertFrom(ITypeDescriptorContext? context, CultureInfo? culture, object value)
         {
             if (value == null)
             {

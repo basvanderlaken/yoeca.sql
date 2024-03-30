@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
-using JetBrains.Annotations;
 
 namespace Yoeca.Sql
 {
@@ -14,17 +13,21 @@ namespace Yoeca.Sql
     public sealed class InsertInto<T> : ISqlCommand<T>
         where T : struct
     {
-        [NotNull]
         private readonly InsertInto m_Source;
 
-        internal InsertInto([NotNull] InsertInto source)
+        internal InsertInto(InsertInto source)
         {
             m_Source = source;
         }
 
         public T TranslateRow(ISqlFields fields)
         {
-            return (T) fields.Get(0);
+            var value = fields.Get(0);
+            if (value is T expectedValue)
+            {
+                return expectedValue;
+            }
+            return default(T);
         }
 
         public string Format(SqlFormat format)
@@ -44,16 +47,14 @@ namespace Yoeca.Sql
 
         private readonly DataType m_AutoIncrementType;
 
-        [NotNull]
         public readonly string Table;
 
-        [NotNull]
         public readonly ImmutableList<KeyValuePair<string, string>> Values;
 
 
         internal InsertInto(
-            [NotNull] string table,
-            [NotNull] ImmutableList<KeyValuePair<string, string>> values,
+            string table,
+            ImmutableList<KeyValuePair<string, string>> values,
             bool updateOnDuplicateKey, bool getLastInsertIdentity,
             DataType autoIncrementType)
         {
@@ -67,14 +68,12 @@ namespace Yoeca.Sql
         /// <summary>
         /// The SQL command that attempts an UPSERT operation when a row with the same primary key.
         /// </summary>
-        [NotNull]
         public InsertInto UpdateOnDuplicateKey =>
             new InsertInto(Table, Values, true, m_GetLastInsertIdentity, m_AutoIncrementType);
 
         /// <summary>
         /// The SQL command will return the last insert identity for the auto incremented field of the table.
         /// </summary>
-        [NotNull]
         public InsertInto<T> GetLastInsertIdentity<T>()
             where T : struct
         {
@@ -111,8 +110,8 @@ namespace Yoeca.Sql
             return builder.ToString();
         }
 
-        [NotNull]
-        public static InsertInto Row<TRecord>([NotNull] TRecord record)
+        public static InsertInto Row<TRecord>(TRecord record)
+            where TRecord: notnull
         {
             var definition = new TableDefinition(typeof(TRecord));
 
@@ -129,6 +128,11 @@ namespace Yoeca.Sql
 
                 var key = columnRetriever.Name;
                 var value = columnRetriever.Get(record);
+
+                if (value is null)
+                {
+                    throw new InvalidOperationException("Value cannot be converted.");
+                }
 
                 if (columnRetriever.RequiresEscaping)
                 {

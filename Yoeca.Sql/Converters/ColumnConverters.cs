@@ -1,12 +1,10 @@
 using System.Collections.Generic;
-using JetBrains.Annotations;
 
 namespace Yoeca.Sql.Converters
 {
     internal static class ColumnConverters
     {
-        [NotNull, ItemNotNull]
-        public static readonly IEnumerable<IColumnConverter> Default = new IColumnConverter[]
+        public static IEnumerable<IColumnConverter> Default { get; }  = new IColumnConverter[]
         {
             new TypeConverterColumnConverter(),
             new StringColumnConverter(),

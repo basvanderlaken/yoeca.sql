@@ -1,19 +1,14 @@
 ﻿using System.Collections.Immutable;
-using System.Linq;
 using System.Text;
-using JetBrains.Annotations;
 
 namespace Yoeca.Sql
 {
     public sealed class CreateTable : ISqlCommand
     {
-        [NotNull]
         public readonly ImmutableList<TableColumn> Columns;
-
-        [NotNull]
         public readonly string Name;
 
-        private CreateTable([NotNull] string name, [NotNull] ImmutableList<TableColumn> columns)
+        private CreateTable(string name, ImmutableList<TableColumn> columns)
         {
             Name = name;
             Columns = columns;
@@ -44,7 +39,6 @@ namespace Yoeca.Sql
             return builder.ToString();
         }
 
-        [NotNull]
         public static CreateTable For<T>()
         {
             var type = typeof(T);
@@ -61,14 +55,12 @@ namespace Yoeca.Sql
             return result;
         }
 
-        [NotNull]
-        public static CreateTable WithName([NotNull] string name)
+        public static CreateTable WithName( string name)
         {
             return new CreateTable(name, ImmutableList<TableColumn>.Empty);
         }
 
-        [NotNull]
-        public CreateTable With([NotNull] TableColumn column)
+        public CreateTable With( TableColumn column)
         {
             return new CreateTable(Name, Columns.Add(column));
         }

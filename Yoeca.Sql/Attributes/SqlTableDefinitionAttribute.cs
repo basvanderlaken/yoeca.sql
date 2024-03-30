@@ -1,16 +1,10 @@
 ﻿using System;
-using JetBrains.Annotations;
 
 namespace Yoeca.Sql
 {
     [AttributeUsage(AttributeTargets.Class)]
-    public sealed class SqlTableDefinitionAttribute : Attribute
+    public sealed class SqlTableDefinitionAttribute(string name) : Attribute
     {
-        public readonly string Name;
-
-        public SqlTableDefinitionAttribute([NotNull] string name)
-        {
-            Name = name;
-        }
+        public string Name { get; } = name;
     }
 }

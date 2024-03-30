@@ -1,15 +1,14 @@
 using System;
 using System.ComponentModel;
 using System.Reflection;
-using JetBrains.Annotations;
 
 namespace Yoeca.Sql.Converters
 {
     internal sealed class TypeConverterColumnConverter : IColumnConverter
     {
-        public ColumnRetriever TryGet(PropertyInfo propertyInfo)
+        public ColumnRetriever? TryGet(PropertyInfo propertyInfo)
         {
-            TypeConverter converter = TryGetConverter(propertyInfo);
+            TypeConverter? converter = TryGetConverter(propertyInfo);
 
             if (converter == null)
             {
@@ -32,19 +31,23 @@ namespace Yoeca.Sql.Converters
             return new ColumnRetriever(propertyInfo, column, converter, requiresEscape);
         }
 
-        [CanBeNull]
-        private TypeConverter TryGetConverter([NotNull] PropertyInfo propertyInfo)
+        private TypeConverter? TryGetConverter(PropertyInfo propertyInfo)
         {
             var attribute = propertyInfo.GetCustomAttribute<TypeConverterAttribute>() ??
                             propertyInfo.PropertyType.GetCustomAttribute<TypeConverterAttribute>();
 
             if (attribute != null)
             {
-                Type type = Type.GetType(attribute.ConverterTypeName);
+                Type? type = Type.GetType(attribute.ConverterTypeName);
 
-                var converter = (TypeConverter) Activator.CreateInstance(type);
+                if (type is null)
+                {
+                    return null;
+                }
 
-                if (converter.CanConvertTo(typeof(string)))
+                var converter = Activator.CreateInstance(type) as TypeConverter;
+
+                if (converter is null || converter.CanConvertTo(typeof(string)))
                 {
                     return converter;
                 }

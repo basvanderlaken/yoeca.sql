@@ -1,37 +1,35 @@
 using System;
 using System.ComponentModel;
 using System.Globalization;
-using JetBrains.Annotations;
 
 namespace Yoeca.Sql.Converters
 {
     internal class EnumIntegerCoverter : TypeConverter
     {
-        [NotNull]
         private readonly Type m_EnumType;
 
         private readonly Array m_EnumValues;
 
-        public EnumIntegerCoverter([NotNull] Type enumType)
+        public EnumIntegerCoverter(Type enumType)
         {
             m_EnumType = enumType;
             m_EnumValues = Enum.GetValues(enumType);
         }
 
-        public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
+        public override bool CanConvertTo(ITypeDescriptorContext? context, Type? destinationType)
         {
             return destinationType == typeof(string) || destinationType == typeof(int);
         }
 
-        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+        public override bool CanConvertFrom(ITypeDescriptorContext? context, Type sourceType)
         {
             return sourceType == typeof(string) || sourceType == typeof(int);
         }
 
-        public override object ConvertTo(
-            ITypeDescriptorContext context,
-            CultureInfo culture,
-            object value,
+        public override object? ConvertTo(
+            ITypeDescriptorContext? context,
+            CultureInfo? culture,
+            object? value,
             Type destinationType)
         {
             if (value == null)
@@ -54,7 +52,7 @@ namespace Yoeca.Sql.Converters
             throw new InvalidOperationException("Unable to convert " + value + " to " + destinationType);
         }
 
-        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+        public override object? ConvertFrom(ITypeDescriptorContext? context, CultureInfo? culture, object value)
         {
             int integerValue = 0;
             if (value is string)

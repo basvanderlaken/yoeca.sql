@@ -1,6 +1,4 @@
-﻿using JetBrains.Annotations;
-
-namespace Yoeca.Sql.NUnit
+﻿namespace Yoeca.Sql.NUnit
 {
     [SqlTableDefinition("with_autoincrement")]
     internal sealed class TableWithIncrement
@@ -13,7 +11,6 @@ namespace Yoeca.Sql.NUnit
         }
 
         [SqlNotNull, MaximumSize(32)]
-        [NotNull]
         public string Value
         {
             get;

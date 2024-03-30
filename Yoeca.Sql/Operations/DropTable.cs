@@ -1,5 +1,4 @@
 using System.Linq;
-using JetBrains.Annotations;
 
 namespace Yoeca.Sql
 {
@@ -7,7 +6,7 @@ namespace Yoeca.Sql
     {
         public readonly string Name;
 
-        private DropTable([NotNull] string name)
+        private DropTable(string name)
         {
             Name = name;
         }
@@ -17,7 +16,6 @@ namespace Yoeca.Sql
             return "DROP TABLE " + Name;
         }
 
-        [NotNull]
         public static DropTable For<T>()
         {
             var type = typeof(T);
@@ -27,8 +25,7 @@ namespace Yoeca.Sql
             return WithName(definition.Name);
         }
 
-        [NotNull]
-        public static DropTable WithName([NotNull] string name)
+        public static DropTable WithName(string name)
         {
             return new DropTable(name);
         }

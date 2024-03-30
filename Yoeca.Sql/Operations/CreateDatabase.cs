@@ -1,18 +1,15 @@
-﻿using JetBrains.Annotations;
-
-namespace Yoeca.Sql
+﻿namespace Yoeca.Sql
 {
     public sealed class CreateDatabase
     {
         public readonly string Name;
 
-        private CreateDatabase([NotNull] string name)
+        private CreateDatabase(string name)
         {
             Name = name;
         }
 
-        [NotNull]
-        public static CreateDatabase WithName([NotNull] string name)
+        public static CreateDatabase WithName(string name)
         {
             return new CreateDatabase(name);
         }

@@ -1,23 +1,16 @@
-using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
-using JetBrains.Annotations;
 
 namespace Yoeca.Sql
 {
     internal sealed class TableDefinition
     {
-        [NotNull, ItemNotNull]
         public readonly ImmutableList<ColumnRetriever> Columns;
 
-        [NotNull]
         public readonly Type DataType;
 
-        [NotNull]
         public readonly string Name;
 
-        public TableDefinition([NotNull] Type dataType)
+        public TableDefinition(Type dataType)
         {
             DataType = dataType;
 
@@ -29,7 +22,7 @@ namespace Yoeca.Sql
 
             foreach (var property in dataType.GetProperties())
             {
-                ColumnRetriever column = ColumnRetriever.TryCreate(property);
+                ColumnRetriever? column = ColumnRetriever.TryCreate(property);
 
                 if (column != null)
                 {

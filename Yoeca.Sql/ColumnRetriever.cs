@@ -1,30 +1,24 @@
-using System;
 using System.ComponentModel;
 using System.Reflection;
-using JetBrains.Annotations;
 using Yoeca.Sql.Converters;
 
 namespace Yoeca.Sql
 {
     internal sealed class ColumnRetriever
     {
-        [NotNull]
-        public readonly TypeConverter Convert;
+        public TypeConverter Convert { get; }
 
-        [NotNull]
-        public readonly string Name;
+        public string Name { get; }
 
-        [NotNull]
-        public readonly PropertyInfo Property;
+        public PropertyInfo Property { get; }
 
-        [NotNull]
-        public readonly TableColumn TableColumn;
+        public TableColumn TableColumn { get; }
 
 
         public ColumnRetriever(
-            [NotNull] PropertyInfo property,
-            [NotNull] TableColumn column,
-            [NotNull] TypeConverter converter,
+            PropertyInfo property,
+            TableColumn column,
+            TypeConverter converter,
             bool requiresEscaping)
         {
             Name = column.Name;
@@ -39,21 +33,20 @@ namespace Yoeca.Sql
             get;
         }
 
-        public void Set([CanBeNull] object value, [NotNull] object target)
+        public void Set(object? value, object target)
         {
-            object propertyValue = GetValue(value);
+            object? propertyValue = GetValue(value);
 
-            Property.SetMethod.Invoke(target,
+            Property.SetMethod?.Invoke(target,
                                       new[]
                                       {
                                           propertyValue
                                       });
         }
 
-        [CanBeNull]
-        public object GetValue([CanBeNull] object value)
+        public object? GetValue(object? value)
         {
-            object propertyValue;
+            object? propertyValue;
 
             if (value == null || value.GetType() == Property.PropertyType)
             {
@@ -63,15 +56,14 @@ namespace Yoeca.Sql
             {
                 propertyValue = Convert.CanConvertFrom(value.GetType())
                     ? Convert.ConvertFrom(value)
-                    : Convert.ConvertFromString(value.ToString());
+                    : Convert.ConvertFromString(value?.ToString() ?? string.Empty);
             }
 
             return propertyValue;
         }
 
 
-        [CanBeNull]
-        public static ColumnRetriever TryCreate([NotNull] PropertyInfo property)
+        public static ColumnRetriever? TryCreate(PropertyInfo property)
         {
             foreach (var columnConverter in ColumnConverters.Default)
             {
@@ -86,10 +78,9 @@ namespace Yoeca.Sql
             throw new NotSupportedException("Unsupported type " + property.PropertyType);
         }
 
-        [CanBeNull]
-        public string Get([NotNull] object record)
+        public string? Get(object record)
         {
-            var propertyValue = Property.GetMethod.Invoke(record, new object[0]);
+            var propertyValue = Property.GetMethod?.Invoke(record, new object[0]);
 
             return Convert.ConvertToString(propertyValue);
         }

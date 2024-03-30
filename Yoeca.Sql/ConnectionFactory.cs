@@ -1,4 +1,3 @@
-using JetBrains.Annotations;
 using Yoeca.Sql.MySql;
 
 namespace Yoeca.Sql
@@ -13,8 +12,7 @@ namespace Yoeca.Sql
         /// </summary>
         /// <param name="connectionString">The SQL connection.</param>
         /// <returns>A new SQL connection instance.</returns>
-        [NotNull]
-        public static ISqlConnection MySql([NotNull] string connectionString)
+        public static ISqlConnection MySql(string connectionString)
         {
             return new MySqlImplementation(connectionString);
         }

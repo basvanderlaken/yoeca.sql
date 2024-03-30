@@ -4,7 +4,7 @@ namespace Yoeca.Sql.Converters
 {
     internal sealed class IntegerColumnConverter : IColumnConverter
     {
-        public ColumnRetriever TryGet(PropertyInfo propertyInfo)
+        public ColumnRetriever? TryGet(PropertyInfo propertyInfo)
         {
             if (propertyInfo.PropertyType != typeof(int))
             {

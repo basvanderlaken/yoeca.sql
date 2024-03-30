@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
-using JetBrains.Annotations;
 using Yoeca.Sql.Converters;
 
 namespace Yoeca.Sql
@@ -10,7 +9,7 @@ namespace Yoeca.Sql
     {
         public readonly DataType DataType;
 
-        [NotNull]
+        
         public readonly string Name;
 
         public readonly bool NotNull;
@@ -23,7 +22,7 @@ namespace Yoeca.Sql
         /// <seealso cref="AutoIncrementAttribute"/>
         public readonly bool AutoIncrement;
 
-        private TableColumn(DataType dataType, int size, [NotNull] string name, bool notNull, bool primaryKey,
+        private TableColumn(DataType dataType, int size,  string name, bool notNull, bool primaryKey,
                             bool autoIncrement)
         {
             DataType = dataType;
@@ -34,15 +33,15 @@ namespace Yoeca.Sql
             AutoIncrement = autoIncrement;
         }
 
-        [NotNull]
-        public static TableColumn FixedText([NotNull] string name, int size, bool notNull, bool primaryKey)
+        
+        public static TableColumn FixedText( string name, int size, bool notNull, bool primaryKey)
         {
             return new TableColumn(DataType.FixedText, size, name, notNull, primaryKey, false);
         }
 
-        [NotNull]
+        
         public static TableColumn VariableText(
-            [NotNull] string name,
+             string name,
             bool notNull,
             bool primaryKey,
             int maximumSize = 0
@@ -51,38 +50,38 @@ namespace Yoeca.Sql
             return new TableColumn(DataType.VariableText, maximumSize, name, notNull, primaryKey, false);
         }
 
-        [NotNull]
-        public static TableColumn Integer([NotNull] string name, bool primaryKey, bool autoIncrement = false)
+        
+        public static TableColumn Integer( string name, bool primaryKey, bool autoIncrement = false)
         {
             return new TableColumn(DataType.Integer, 0, name, false, primaryKey, autoIncrement);
         }
 
-        [NotNull]
-        public static TableColumn Long([NotNull] string name, bool primaryKey, bool autoIncrement = false)
+        
+        public static TableColumn Long( string name, bool primaryKey, bool autoIncrement = false)
         {
             return new TableColumn(DataType.Long, 0, name, false, primaryKey, autoIncrement);
         }
 
-        [NotNull]
-        public static TableColumn UnsignedLong([NotNull] string name, bool primaryKey, bool autoIncrement = false)
+        
+        public static TableColumn UnsignedLong( string name, bool primaryKey, bool autoIncrement = false)
         {
             return new TableColumn(DataType.UnsignedLong, 0, name, false, primaryKey, autoIncrement);
         }
 
-        [NotNull]
-        public static TableColumn Blob([NotNull] string name, bool notNull, bool primaryKey)
+        
+        public static TableColumn Blob( string name, bool notNull, bool primaryKey)
         {
             return new TableColumn(DataType.Binary, 0, name, notNull, primaryKey, false);
         }
 
-        [NotNull]
-        public static TableColumn Double([NotNull] string name, bool hasSqlPrimaryKey)
+        
+        public static TableColumn Double( string name, bool hasSqlPrimaryKey)
         {
             return new TableColumn(DataType.Double, 0, name, false, hasSqlPrimaryKey, false);
         }
 
 
-        [NotNull]
+        
         public string Format(SqlFormat format)
         {
             string result = PreFormat(format);
@@ -100,7 +99,7 @@ namespace Yoeca.Sql
             return result;
         }
 
-        [NotNull]
+        
         private string PreFormat(SqlFormat format)
         {
             switch (DataType)
@@ -141,37 +140,37 @@ namespace Yoeca.Sql
             }
         }
 
-        public static int GetFixedSize([NotNull] PropertyInfo property, int defaultSize = -1)
+        public static int GetFixedSize( PropertyInfo property, int defaultSize = -1)
         {
             var attribute = property.GetCustomAttribute<FixedSizeAttribute>();
 
             return attribute?.Size ?? -1;
         }
 
-        public static int GetMaximumSize([NotNull] PropertyInfo property, int defaultSize = -1)
+        public static int GetMaximumSize( PropertyInfo property, int defaultSize = -1)
         {
             var attribute = property.GetCustomAttribute<MaximumSizeAttribute>();
 
             return attribute?.Size ?? defaultSize;
         }
 
-        public static bool HasSqlNotNull([NotNull] PropertyInfo property)
+        public static bool HasSqlNotNull( PropertyInfo property)
         {
             return Attribute.GetCustomAttributes(property, typeof(SqlNotNullAttribute)).Any();
         }
 
-        public static bool HasSqlPrimaryKey([NotNull] PropertyInfo property)
+        public static bool HasSqlPrimaryKey( PropertyInfo property)
         {
             return Attribute.GetCustomAttributes(property, typeof(SqlPrimaryKeyAttribute)).Any();
         }
 
-        public static bool HasAutoIncrement([NotNull] PropertyInfo property)
+        public static bool HasAutoIncrement( PropertyInfo property)
         {
             return Attribute.GetCustomAttributes(property, typeof(AutoIncrementAttribute)).Any();
         }
 
-        [NotNull]
-        public static TableColumn Create([NotNull] PropertyInfo property)
+        
+        public static TableColumn Create( PropertyInfo property)
         {
             foreach (var columnConverter in ColumnConverters.Default)
             {

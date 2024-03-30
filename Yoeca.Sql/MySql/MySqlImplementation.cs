@@ -1,19 +1,15 @@
-using System.Collections.Generic;
 using System.Data.Common;
-using System.Threading.Tasks;
-using JetBrains.Annotations;
 using MySql.Data.MySqlClient;
 
 namespace Yoeca.Sql.MySql
 {
     internal sealed class MySqlImplementation : ISqlConnection
     {
-        [NotNull]
-        private readonly string m_ConnectionString;
+        private readonly string mConnectionString;
 
-        public MySqlImplementation([NotNull] string connectionString)
+        public MySqlImplementation(string connectionString)
         {
-            m_ConnectionString = connectionString;
+            mConnectionString = connectionString;
         }
 
         public void Execute(ISqlCommand command)
@@ -64,7 +60,7 @@ namespace Yoeca.Sql.MySql
             }
         }
 
-        public T ExecuteSingle<T>(ISqlCommand<T> command)
+        public T? ExecuteSingle<T>(ISqlCommand<T> command)
         {
             var formatted = command.Format(SqlFormat.MySql);
             using (var connection = Open())
@@ -85,7 +81,7 @@ namespace Yoeca.Sql.MySql
             return default(T);
         }
 
-        public async Task<T> ExecuteSingleAsync<T>(ISqlCommand<T> command)
+        public async Task<T?> ExecuteSingleAsync<T>(ISqlCommand<T> command)
         {
             var formatted = command.Format(SqlFormat.MySql);
             using (var connection = Open())
@@ -106,10 +102,9 @@ namespace Yoeca.Sql.MySql
             return default(T);
         }
 
-        [NotNull]
         private MySqlConnection Open()
         {
-            var connection = new MySqlConnection(m_ConnectionString);
+            var connection = new MySqlConnection(mConnectionString);
 
             connection.Open();
             return connection;
@@ -117,11 +112,9 @@ namespace Yoeca.Sql.MySql
 
         private sealed class MySqlFields : ISqlFields
         {
-            [NotNull]
-            [ItemNotNull]
             private readonly DbDataReader m_Reader;
 
-            public MySqlFields([NotNull] [ItemNotNull] DbDataReader reader)
+            public MySqlFields(DbDataReader reader)
             {
                 m_Reader = reader;
             }

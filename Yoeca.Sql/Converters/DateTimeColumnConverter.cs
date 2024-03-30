@@ -5,7 +5,7 @@ namespace Yoeca.Sql.Converters
 {
     internal sealed class DateTimeColumnConverter : IColumnConverter
     {
-        public ColumnRetriever TryGet(PropertyInfo propertyInfo)
+        public ColumnRetriever? TryGet(PropertyInfo propertyInfo)
         {
             if (propertyInfo.PropertyType != typeof(DateTime))
             {

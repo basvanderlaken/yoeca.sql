@@ -1,24 +1,20 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
 
 namespace Yoeca.Sql
 {
     public interface ISqlConnection
     {
-        void Execute([NotNull] ISqlCommand command);
+        void Execute(ISqlCommand command);
 
-        [NotNull]
-        Task ExecuteAsync([NotNull] ISqlCommand command);
+        
+        Task ExecuteAsync(ISqlCommand command);
 
 
-        [NotNull, ItemNotNull]
-        IEnumerable<T> ExecuteRead<T>([NotNull] ISqlCommand<T> command);
+        IEnumerable<T> ExecuteRead<T>(ISqlCommand<T> command);
 
-        [CanBeNull]
-        T ExecuteSingle<T>([NotNull] ISqlCommand<T> command);
+        T? ExecuteSingle<T>(ISqlCommand<T> command);
 
-        [NotNull, ItemCanBeNull]
-        Task<T> ExecuteSingleAsync<T>([NotNull] ISqlCommand<T> command);
+        Task<T?> ExecuteSingleAsync<T>(ISqlCommand<T> command);
     }
 }
