@@ -34,7 +34,7 @@ namespace Yoeca.Sql
         }
 
         
-        public static TableColumn FixedText( string name, int size, bool notNull, bool primaryKey)
+        public static TableColumn FixedText(string name, int size, bool notNull, bool primaryKey)
         {
             return new TableColumn(DataType.FixedText, size, name, notNull, primaryKey, false);
         }

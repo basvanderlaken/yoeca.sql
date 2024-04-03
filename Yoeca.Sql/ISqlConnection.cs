@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Threading.Tasks;
 
 namespace Yoeca.Sql
@@ -16,5 +17,7 @@ namespace Yoeca.Sql
         T? ExecuteSingle<T>(ISqlCommand<T> command);
 
         Task<T?> ExecuteSingleAsync<T>(ISqlCommand<T> command);
+
+        Task<ImmutableArray<T>> ExecuteReadAsync<T>(ISqlCommand<T> command);
     }
 }

@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using System.Data.Common;
 using MySql.Data.MySqlClient;
 
@@ -58,6 +59,33 @@ namespace Yoeca.Sql.MySql
                     }
                 }
             }
+        }
+
+        public async Task<ImmutableArray<T>> ExecuteReadAsync<T>(ISqlCommand<T> command)
+        {
+            var result = ImmutableArray.CreateBuilder<T>();
+            var formatted = command.Format(SqlFormat.MySql);
+            using (var connection = Open())
+            {
+                using (var sqlCommand = new MySqlCommand(formatted, connection))
+                {
+                    using (var reader = await sqlCommand.ExecuteReaderAsync())
+                    {
+                        var fields = new MySqlFields(reader);
+                        while (await reader.ReadAsync())
+                        {
+                            var row = command.TranslateRow(fields);
+
+                            if (row != null)
+                            {
+                                result.Add(row);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return result.ToImmutable ();
         }
 
         public T? ExecuteSingle<T>(ISqlCommand<T> command)

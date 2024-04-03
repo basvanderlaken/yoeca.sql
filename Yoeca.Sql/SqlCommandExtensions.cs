@@ -31,7 +31,14 @@ namespace Yoeca.Sql
             return connection.ExecuteSingle(command);
         }
 
-        
+        public static Task<T?> ExecuteSingleAsync<T>(
+             this ISqlCommand<T> command,
+             ISqlConnection connection)
+        {
+            return connection.ExecuteSingleAsync(command);
+        }
+
+
         public static Task<bool> ExecuteCheckAsync(
              this ISqlCommand<bool> command,
              ISqlConnection connection)
@@ -44,6 +51,20 @@ namespace Yoeca.Sql
             try
             {
                 command.Execute(connection);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public static async Task<bool> TryExecuteAsync(this ISqlCommand command, ISqlConnection connection)
+        {
+            try
+            {
+                await command.ExecuteAsync(connection);
             }
             catch (Exception)
             {
