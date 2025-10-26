@@ -92,6 +92,12 @@ namespace Yoeca.Sql
             return new SelectValue<T, TValue>(Table, column.Name, Constraints, ValueOperations.Minimum);
         }
 
+        /// <summary>
+        /// Creates a command that calculates the sum of the specified column.
+        /// </summary>
+        /// <typeparam name="TValue">Type of the column result.</typeparam>
+        /// <param name="expression">Lambda pointing to the column that needs to be aggregated.</param>
+        /// <returns>A command that selects the sum value.</returns>
         public SelectValue<T, TValue> Sum<TValue>(Expression<Func<T, TValue>> expression)
         {
             var column = GetColumn(expression);
@@ -99,6 +105,14 @@ namespace Yoeca.Sql
             return new SelectValue<T, TValue>(Table, column.Name, Constraints, ValueOperations.Sum);
         }
 
+        /// <summary>
+        /// Creates a command that calculates the sum of a column grouped by another column.
+        /// </summary>
+        /// <typeparam name="TValue">Type of the column that is summed.</typeparam>
+        /// <typeparam name="TGroup">Type of the column that is used for the grouping.</typeparam>
+        /// <param name="valueExpression">Expression resolving the column to aggregate.</param>
+        /// <param name="groupExpression">Expression resolving the column to group on.</param>
+        /// <returns>A command that selects grouped sum values.</returns>
         public SelectGroupedValue<T, TGroup, TValue> SumBy<TValue, TGroup>(
             Expression<Func<T, TValue>> valueExpression,
             Expression<Func<T, TGroup>> groupExpression)

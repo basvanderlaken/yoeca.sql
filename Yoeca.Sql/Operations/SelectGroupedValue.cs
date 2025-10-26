@@ -5,16 +5,21 @@ using System.Text;
 
 namespace Yoeca.Sql
 {
+    /// <summary>
+    /// Represents a SELECT statement that returns grouped sum values.
+    /// </summary>
+    /// <typeparam name="TTable">The entity that maps to the database table.</typeparam>
+    /// <typeparam name="TGroup">Type of the group column.</typeparam>
+    /// <typeparam name="TValue">Type of the aggregated column.</typeparam>
     public sealed class SelectGroupedValue<TTable, TGroup, TValue> : ISqlCommand<GroupedValue<TGroup, TValue>>
     {
-        public readonly ImmutableList<Where> Constraints;
-
-        public readonly string GroupColumn;
-
-        public readonly string Table;
-
-        public readonly string ValueColumn;
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SelectGroupedValue{TTable, TGroup, TValue}"/> class.
+        /// </summary>
+        /// <param name="table">Name of the table.</param>
+        /// <param name="groupColumn">Column that is used for the GROUP BY clause.</param>
+        /// <param name="valueColumn">Column that is summed.</param>
+        /// <param name="constraints">WHERE clauses appended to the query.</param>
         public SelectGroupedValue(
             string table,
             string groupColumn,
@@ -27,6 +32,27 @@ namespace Yoeca.Sql
             Constraints = constraints;
         }
 
+        /// <summary>
+        /// Gets the WHERE clauses applied to the query.
+        /// </summary>
+        public readonly ImmutableList<Where> Constraints;
+
+        /// <summary>
+        /// Gets the column used for grouping.
+        /// </summary>
+        public readonly string GroupColumn;
+
+        /// <summary>
+        /// Gets the table name.
+        /// </summary>
+        public readonly string Table;
+
+        /// <summary>
+        /// Gets the column that is summed.
+        /// </summary>
+        public readonly string ValueColumn;
+
+        /// <inheritdoc />
         public GroupedValue<TGroup, TValue> TranslateRow(ISqlFields fields)
         {
             return new GroupedValue<TGroup, TValue>(
@@ -34,6 +60,7 @@ namespace Yoeca.Sql
                 ConvertValue<TValue>(fields.Get(1)));
         }
 
+        /// <inheritdoc />
         public string Format(SqlFormat format)
         {
             var builder = new StringBuilder();
@@ -53,6 +80,12 @@ namespace Yoeca.Sql
             return builder.ToString();
         }
 
+        /// <summary>
+        /// Converts database values to the requested CLR type when possible.
+        /// </summary>
+        /// <typeparam name="T">Requested result type.</typeparam>
+        /// <param name="value">Database value.</param>
+        /// <returns>Converted value or <see langword="default"/> if conversion fails.</returns>
         private static T? ConvertValue<T>(object? value)
         {
             if (value == null || value is DBNull)
