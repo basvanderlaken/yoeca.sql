@@ -1,6 +1,9 @@
-﻿using System;
+using System;
+using System.Collections.Immutable;
 using NUnit.Framework;
 using Yoeca.Sql.NUnit;
+
+#nullable enable
 
 namespace Yoeca.Sql.Tests.Basic
 {
@@ -45,6 +48,62 @@ namespace Yoeca.Sql.Tests.Basic
         {
             Assert.That(Select.From<SimpleTableWithDouble>().Minimum(x => x.Value).Format(SqlFormat.MySql),
                         Is.EqualTo("SELECT MIN(Value) FROM simple_double"));
+        }
+
+        [Test]
+        public void SelectSum()
+        {
+            Assert.That(Select.From<SimpleTableWithDouble>().Sum(x => x.Value).Format(SqlFormat.MySql),
+                        Is.EqualTo("SELECT SUM(Value) FROM simple_double"));
+        }
+
+        [Test]
+        public void SelectSumWithGrouping()
+        {
+            Assert.That(Select.From<ExtendedTable>().SumBy(x => x.Age, x => x.Name).Format(SqlFormat.MySql),
+                        Is.EqualTo("SELECT Name, SUM(Age) FROM Extended\r\nGROUP BY Name"));
+        }
+
+        [Test]
+        public void SelectValueTranslatesConvertibleTypes()
+        {
+            var command = new SelectValue<SimpleTableWithDouble, int>(
+                "simple_double",
+                "Value",
+                ImmutableList<Where>.Empty,
+                ValueOperations.Sum);
+
+            Assert.That(command.TranslateRow(new FakeFields(12L)), Is.EqualTo(12));
+        }
+
+        [Test]
+        public void SelectGroupedValueTranslatesConvertibleTypes()
+        {
+            var command = new SelectGroupedValue<ExtendedTable, string, int>(
+                "Extended",
+                "Name",
+                "Age",
+                ImmutableList<Where>.Empty);
+
+            var result = command.TranslateRow(new FakeFields("Peter", 12L));
+
+            Assert.That(result.Group, Is.EqualTo("Peter"));
+            Assert.That(result.Value, Is.EqualTo(12));
+        }
+
+        private sealed class FakeFields : ISqlFields
+        {
+            private readonly object?[] mValues;
+
+            public FakeFields(params object?[] values)
+            {
+                mValues = values;
+            }
+
+            public object? Get(int fieldIndex)
+            {
+                return mValues[fieldIndex];
+            }
         }
     }
 }

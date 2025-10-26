@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Yoeca.Sql
 {
-    public sealed class Delete
+    public static class Delete
     {
         public static Delete<T> From<T>()
             where T : new()

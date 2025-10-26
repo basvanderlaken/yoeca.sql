@@ -11,6 +11,7 @@ namespace Yoeca.Sql
         Binary = 7,
         UnsignedInteger = 8,
         UnsignedLong = 9,
+        Decimal = 10,
         Unknown = int.MaxValue
     }
 }

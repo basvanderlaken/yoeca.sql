@@ -92,6 +92,23 @@ namespace Yoeca.Sql
             return new SelectValue<T, TValue>(Table, column.Name, Constraints, ValueOperations.Minimum);
         }
 
+        public SelectValue<T, TValue> Sum<TValue>(Expression<Func<T, TValue>> expression)
+        {
+            var column = GetColumn(expression);
+
+            return new SelectValue<T, TValue>(Table, column.Name, Constraints, ValueOperations.Sum);
+        }
+
+        public SelectGroupedValue<T, TGroup, TValue> SumBy<TValue, TGroup>(
+            Expression<Func<T, TValue>> valueExpression,
+            Expression<Func<T, TGroup>> groupExpression)
+        {
+            var valueColumn = GetColumn(valueExpression);
+            var groupColumn = GetColumn(groupExpression);
+
+            return new SelectGroupedValue<T, TGroup, TValue>(Table, groupColumn.Name, valueColumn.Name, Constraints);
+        }
+
         
         public static Select<T> All()
         {
@@ -126,7 +143,7 @@ namespace Yoeca.Sql
         }
 
         
-        public Select<T> WhereContains( Expression<Func<T, string>> expression,  string value)
+        public Select<T> WhereContains(Expression<Func<T, string>> expression,  string value)
         {
             var column = GetColumn(expression);
             string formattedValue = "'%" + value + "%'";

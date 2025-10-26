@@ -1,6 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Collections.Immutable;
 
 namespace Yoeca.Sql
 {
@@ -22,6 +20,13 @@ namespace Yoeca.Sql
              ISqlConnection connection)
         {
             return connection.ExecuteRead(command);
+        }
+
+        public static Task<ImmutableArray<T>> ExecuteReadAsync<T>(
+             this ISqlCommand<T> command,
+             ISqlConnection connection)
+        {
+            return connection.ExecuteReadAsync(command);
         }
 
         public static bool ExecuteCheck(

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Immutable;
+using System.Globalization;
 using System.Text;
 
 
@@ -33,11 +34,30 @@ namespace Yoeca.Sql
 
         public TValue? TranslateRow(ISqlFields fields)
         {
-            if (fields.Get(0) is TValue expectedValue)
+            return ConvertValue(fields.Get(0));
+        }
+
+        private static TValue? ConvertValue(object? value)
+        {
+            if (value == null || value is DBNull)
+            {
+                return default;
+            }
+
+            if (value is TValue expectedValue)
             {
                 return expectedValue;
             }
-            return default(TValue);
+
+            Type targetType = Nullable.GetUnderlyingType(typeof(TValue)) ?? typeof(TValue);
+
+            if (value is IConvertible && typeof(IConvertible).IsAssignableFrom(targetType))
+            {
+                object converted = Convert.ChangeType(value, targetType, CultureInfo.InvariantCulture);
+                return (TValue)converted;
+            }
+
+            return default;
         }
 
         public string Format(SqlFormat format)
@@ -51,6 +71,9 @@ namespace Yoeca.Sql
                     break;
                 case ValueOperations.Minimum:
                     builder.AppendFormat("SELECT MIN({0}) ", Parameter);
+                    break;
+                case ValueOperations.Sum:
+                    builder.AppendFormat("SELECT SUM({0}) ", Parameter);
                     break;
                 default:
                     throw new NotSupportedException("Unsupported seelect operation: " + Operation);

@@ -12,9 +12,9 @@ namespace Yoeca.Sql.Converters
             object? value,
             Type destinationType)
         {
-            if (value is int intValue)
+            if (value is double doubleValue)
             {
-                return intValue.ToString("G17", CultureInfo.InvariantCulture);
+                return doubleValue.ToString("G17", CultureInfo.InvariantCulture);
             }
 
             return string.Empty;
@@ -28,6 +28,33 @@ namespace Yoeca.Sql.Converters
             }
 
             return double.Parse((string) value);
+        }
+    }
+
+    internal class DecimalStringCoverter : StringConverter
+    {
+        public override object ConvertTo(
+            ITypeDescriptorContext? context,
+            CultureInfo? culture,
+            object? value,
+            Type destinationType)
+        {
+            if (value is decimal decimalValue)
+            {
+                return decimalValue.ToString("G17", CultureInfo.InvariantCulture);
+            }
+
+            return string.Empty;
+        }
+
+        public override object ConvertFrom(ITypeDescriptorContext? context, CultureInfo? culture, object value)
+        {
+            if (value == null)
+            {
+                return 0m;
+            }
+
+            return decimal.Parse((string)value);
         }
     }
 }

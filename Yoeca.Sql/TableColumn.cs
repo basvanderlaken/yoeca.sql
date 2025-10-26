@@ -5,33 +5,10 @@ using Yoeca.Sql.Converters;
 
 namespace Yoeca.Sql
 {
-    public sealed class TableColumn
+    public record  TableColumn (DataType DataType, int Size, string Name, bool NotNull, bool PrimaryKey,
+                            bool AutoIncrement, int Decimals = 8, int DecimalFraction = 2)
     {
-        public readonly DataType DataType;
-
-        
-        public readonly string Name;
-
-        public readonly bool NotNull;
-        public readonly bool PrimaryKey;
-        public readonly int Size;
-
-        /// <summary>
-        /// Flag indicating the column will be auto-incremented by the database.
-        /// </summary>
-        /// <seealso cref="AutoIncrementAttribute"/>
-        public readonly bool AutoIncrement;
-
-        private TableColumn(DataType dataType, int size,  string name, bool notNull, bool primaryKey,
-                            bool autoIncrement)
-        {
-            DataType = dataType;
-            Size = size;
-            Name = name;
-            NotNull = notNull;
-            PrimaryKey = primaryKey;
-            AutoIncrement = autoIncrement;
-        }
+       
 
         
         public static TableColumn FixedText(string name, int size, bool notNull, bool primaryKey)
@@ -80,8 +57,11 @@ namespace Yoeca.Sql
             return new TableColumn(DataType.Double, 0, name, false, hasSqlPrimaryKey, false);
         }
 
+        public static TableColumn Decimal(string name, bool hasSqlPrimaryKey, int decimals = 8, int decimalFraction = 2)
+        {
+            return new TableColumn(DataType.Decimal, 0, name, false, hasSqlPrimaryKey, false, decimals, decimalFraction);
+        }
 
-        
         public string Format(SqlFormat format)
         {
             string result = PreFormat(format);
@@ -135,6 +115,8 @@ namespace Yoeca.Sql
                     }
 
                     return $"{Name} BLOB";
+                case DataType.Decimal:
+                    return $"{Name} DECIMAL({Decimals},{DecimalFraction})";
                 default:
                     throw new NotSupportedException("Specified data type is not supported: " + DataType);
             }

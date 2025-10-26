@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace Yoeca.Sql.Converters
 {
     internal static class ColumnConverters
@@ -15,7 +13,8 @@ namespace Yoeca.Sql.Converters
             new EnumColumnConverter(),
             new DoubleColumnConverter(),
             new ProtoBufferColumnConverter(),
-            new DateTimeColumnConverter()
+            new DateTimeColumnConverter(),
+            new DecimalColumnConverter (),
         };
     }
 }

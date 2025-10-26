@@ -74,6 +74,30 @@ namespace Yoeca.Sql.Tests.Integration
 
             Assert.That(minimumAge, Has.Count.EqualTo(1));
             Assert.That(minimumAge[0], Is.EqualTo(22));
+
+            var secondPeter = new Player
+            {
+                Identifier = Guid.NewGuid(),
+                Name = "Peter",
+                Age = 40,
+                Birthday = new DateTime(1983, 3, 23).ToUniversalTime()
+            };
+
+            InsertInto.Row(secondPeter).Execute(Connection);
+
+            var groupedAges = Select.From<Player>()
+                                    .SumBy(x => x.Age, x => x.Name)
+                                    .ExecuteRead(Connection)
+                                    .OrderBy(x => x.Group)
+                                    .ToImmutableList();
+
+            Assert.That(groupedAges, Has.Count.EqualTo(2));
+
+            var peterGroup = groupedAges.Single(x => x.Group == "Peter");
+            var willemGroup = groupedAges.Single(x => x.Group == "Willem");
+
+            Assert.That(peterGroup.Value, Is.EqualTo(peter.Age + secondPeter.Age));
+            Assert.That(willemGroup.Value, Is.EqualTo(willem.Age));
         }
 
         [Test]
