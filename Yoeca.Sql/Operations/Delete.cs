@@ -48,12 +48,15 @@ namespace Yoeca.Sql
         {
             var builder = new StringBuilder();
 
-            builder.AppendFormat($"DELETE FROM {Table} ");
+            builder.AppendFormat("DELETE FROM {0} ", SqlIdentifier.Quote(Table, format));
+
+            bool isFirstConstraint = true;
 
             foreach (var constraint in Constraints)
             {
                 builder.AppendLine();
-                builder.Append(constraint.Format(format));
+                builder.Append(constraint.Format(format, isFirstConstraint));
+                isFirstConstraint = false;
             }
 
             return builder.ToString();

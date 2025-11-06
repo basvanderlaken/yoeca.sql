@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+using System;
+using NUnit.Framework;
 using Yoeca.Sql.NUnit;
 
 namespace Yoeca.Sql.Tests.Basic
@@ -9,10 +10,12 @@ namespace Yoeca.Sql.Tests.Basic
         [Test]
         public void SupportForBasicTypes()
         {
-            const string expected = @"CREATE TABLE Extended(
-Identifier CHAR(32) NOT NULL, Name VARCHAR(128) NOT NULL, Age INT SIGNED, Payload BLOB NOT NULL,
-PRIMARY KEY (Identifier)
-)";
+            string expected = string.Join(
+                Environment.NewLine,
+                "CREATE TABLE `Extended`(",
+                "`Identifier` CHAR(32) NOT NULL, `Name` VARCHAR(128) NOT NULL, `Age` INT SIGNED, `Payload` BLOB NOT NULL,",
+                "PRIMARY KEY (`Identifier`)",
+                ")");
             string command = CreateTable.For<ExtendedTable>().Format(SqlFormat.MySql);
 
             Assert.That(command, Is.EqualTo(expected));
@@ -21,9 +24,11 @@ PRIMARY KEY (Identifier)
         [Test]
         public void SupportForDatetime()
         {
-            const string expected = @"CREATE TABLE simple_datetime(
-Value BIGINT SIGNED
-)";
+            string expected = string.Join(
+                Environment.NewLine,
+                "CREATE TABLE `simple_datetime`(",
+                "`Value` BIGINT SIGNED",
+                ")");
             string command = CreateTable.For<SimpleTableWithDateTime>().Format(SqlFormat.MySql);
 
             Assert.That(command, Is.EqualTo(expected));
@@ -32,9 +37,11 @@ Value BIGINT SIGNED
         [Test]
         public void SupportForDouble()
         {
-            const string expected = @"CREATE TABLE simple_double(
-Value DOUBLE
-)";
+            string expected = string.Join(
+                Environment.NewLine,
+                "CREATE TABLE `simple_double`(",
+                "`Value` DOUBLE",
+                ")");
             string command = CreateTable.For<SimpleTableWithDouble>().Format(SqlFormat.MySql);
 
             Assert.That(command, Is.EqualTo(expected));
@@ -43,10 +50,12 @@ Value DOUBLE
         [Test]
         public void SupportForEnums()
         {
-            const string expected = @"CREATE TABLE enumtable(
-Name VARCHAR(128) NOT NULL, Something INT SIGNED,
-PRIMARY KEY (Name)
-)";
+            string expected = string.Join(
+                Environment.NewLine,
+                "CREATE TABLE `enumtable`(",
+                "`Name` VARCHAR(128) NOT NULL, `Something` INT SIGNED,",
+                "PRIMARY KEY (`Name`)",
+                ")");
             string command = CreateTable.For<EnumTable>().Format(SqlFormat.MySql);
 
             Assert.That(command, Is.EqualTo(expected));
@@ -55,9 +64,11 @@ PRIMARY KEY (Name)
         [Test]
         public void SupportForSimpleType()
         {
-            const string expected = @"CREATE TABLE Simple(
-Name TEXT
-)";
+            string expected = string.Join(
+                Environment.NewLine,
+                "CREATE TABLE `Simple`(",
+                "`Name` TEXT",
+                ")");
             string command = CreateTable.For<SimpleTableWithName>().Format(SqlFormat.MySql);
 
             Assert.That(command, Is.EqualTo(expected));

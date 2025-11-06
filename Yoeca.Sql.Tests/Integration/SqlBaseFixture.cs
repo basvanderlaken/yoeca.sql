@@ -13,6 +13,7 @@ namespace Yoeca.Sql.Tests.Integration
         [SetUp]
         public void Setup()
         {
+            Assert.That (MySqlTestDatabase.ConnectionString, Is.Not.Null.And.Not.Empty, "The MySQL connection string must be set for integration tests.");
             Connection = ConnectionFactory.MySql(MySqlTestDatabase.ConnectionString);
         }
     }

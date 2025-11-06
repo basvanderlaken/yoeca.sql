@@ -16,7 +16,7 @@
 
         public override string ToString()
         {
-            return "CREATE DATABASE " + Name;
+            return "CREATE DATABASE " + SqlIdentifier.Quote(Name, SqlFormat.MySql);
         }
     }
 }

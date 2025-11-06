@@ -82,41 +82,43 @@ namespace Yoeca.Sql
         
         private string PreFormat(SqlFormat format)
         {
+            string identifier = SqlIdentifier.Quote(Name, format);
+
             switch (DataType)
             {
                 case DataType.FixedText:
-                    return $"{Name} CHAR({Size})";
+                    return $"{identifier} CHAR({Size})";
                 case DataType.VariableText:
                     if (Size > 0 && Size <= 255)
                     {
-                        return $"{Name} VARCHAR({Size})";
+                        return $"{identifier} VARCHAR({Size})";
                     }
 
-                    return $"{Name} TEXT";
+                    return $"{identifier} TEXT";
                 case DataType.Integer:
-                    return $"{Name} INT SIGNED";
+                    return $"{identifier} INT SIGNED";
                 case DataType.UnsignedInteger:
-                    return $"{Name} INT UNSIGNED";
+                    return $"{identifier} INT UNSIGNED";
                 case DataType.Double:
-                    return $"{Name} DOUBLE";
+                    return $"{identifier} DOUBLE";
                 case DataType.Long:
-                    return $"{Name} BIGINT SIGNED";
+                    return $"{identifier} BIGINT SIGNED";
                 case DataType.UnsignedLong:
-                    return $"{Name} BIGINT UNSIGNED";
+                    return $"{identifier} BIGINT UNSIGNED";
                 case DataType.Binary:
                     if (Size > 16777215)
                     {
-                        return $"{Name} LONGBLOB";
+                        return $"{identifier} LONGBLOB";
                     }
 
                     if (Size > 65535)
                     {
-                        return $"{Name} MEDIUMBLOB";
+                        return $"{identifier} MEDIUMBLOB";
                     }
 
-                    return $"{Name} BLOB";
+                    return $"{identifier} BLOB";
                 case DataType.Decimal:
-                    return $"{Name} DECIMAL({Decimals},{DecimalFraction})";
+                    return $"{identifier} DECIMAL({Decimals},{DecimalFraction})";
                 default:
                     throw new NotSupportedException("Specified data type is not supported: " + DataType);
             }

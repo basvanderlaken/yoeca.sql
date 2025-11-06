@@ -21,7 +21,7 @@ namespace Yoeca.Sql.Tests.Basic
                 }
             };
 
-            string expected = @"INSERT INTO Extended (Identifier, Name, Age, Payload) VALUES ('" +
+            string expected = @"INSERT INTO `Extended` (`Identifier`, `Name`, `Age`, `Payload`) VALUES ('" +
                               value.Identifier.ToString("N") + "', 'Foo', 10, x'FF000000')";
 
 
@@ -31,9 +31,9 @@ namespace Yoeca.Sql.Tests.Basic
 
             command = InsertInto.Row(value).UpdateOnDuplicateKey.Format(SqlFormat.MySql);
 
-            string fullExpected = expected + "\r\nON DUPLICATE KEY UPDATE Identifier='" +
+            string fullExpected = expected + "\r\nON DUPLICATE KEY UPDATE `Identifier`='" +
                                   value.Identifier.ToString("N") +
-                                  "', Name='Foo', Age=10, Payload=x'FF000000'";
+                                  "', `Name`='Foo', `Age`=10, `Payload`=x'FF000000'";
 
             Assert.That(command, Is.EqualTo(fullExpected));
         }
@@ -47,7 +47,7 @@ namespace Yoeca.Sql.Tests.Basic
             };
 
             string expected =
-                $"INSERT INTO with_autoincrement (Value) VALUES ('Foo');{Environment.NewLine}SELECT LAST_INSERT_ID();";
+                $"INSERT INTO `with_autoincrement` (`Value`) VALUES ('Foo');{Environment.NewLine}SELECT LAST_INSERT_ID();";
             string command = InsertInto.Row(value).GetLastInsertIdentity<long>().Format(SqlFormat.MySql);
 
             Assert.That(command, Is.EqualTo(expected));

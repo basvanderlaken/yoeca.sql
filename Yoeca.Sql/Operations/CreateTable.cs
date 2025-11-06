@@ -18,7 +18,7 @@ namespace Yoeca.Sql
         {
             var builder = new StringBuilder();
 
-            builder.AppendFormat("CREATE TABLE {0}", Name);
+            builder.AppendFormat("CREATE TABLE {0}", SqlIdentifier.Quote(Name, format));
             builder.AppendLine("(");
             builder.Append(string.Join(", ", Columns.Select(x => x.Format(format))));
             var primaryKeys = Columns.Where(x => x.PrimaryKey).ToList();
@@ -26,7 +26,8 @@ namespace Yoeca.Sql
             if (primaryKeys.Count > 0)
             {
                 builder.AppendLine(",");
-                builder.AppendFormat("PRIMARY KEY ({0})", string.Join(", ", primaryKeys.Select(x => x.Name)));
+                builder.AppendFormat("PRIMARY KEY ({0})",
+                                     string.Join(", ", SqlIdentifier.Quote(primaryKeys.Select(x => x.Name), format)));
                 builder.AppendLine();
             }
             else

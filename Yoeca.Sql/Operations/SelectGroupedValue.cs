@@ -64,18 +64,24 @@ namespace Yoeca.Sql
         public string Format(SqlFormat format)
         {
             var builder = new StringBuilder();
+            string groupColumn = SqlIdentifier.Quote(GroupColumn, format);
+            string valueColumn = SqlIdentifier.Quote(ValueColumn, format);
+            string table = SqlIdentifier.Quote(Table, format);
 
-            builder.AppendFormat("SELECT {0}, SUM({1}) ", GroupColumn, ValueColumn);
-            builder.AppendFormat("FROM {0}", Table);
+            builder.AppendFormat("SELECT {0}, SUM({1}) ", groupColumn, valueColumn);
+            builder.AppendFormat("FROM {0}", table);
+
+            bool isFirstConstraint = true;
 
             foreach (var constraint in Constraints)
             {
                 builder.AppendLine();
-                builder.Append(constraint.Format(format));
+                builder.Append(constraint.Format(format, isFirstConstraint));
+                isFirstConstraint = false;
             }
 
             builder.AppendLine();
-            builder.AppendFormat("GROUP BY {0}", GroupColumn);
+            builder.AppendFormat("GROUP BY {0}", groupColumn);
 
             return builder.ToString();
         }

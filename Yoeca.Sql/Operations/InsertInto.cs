@@ -91,14 +91,18 @@ namespace Yoeca.Sql
         {
             var builder = new StringBuilder();
 
-            builder.AppendFormat("INSERT INTO {0} ({1}) ", Table, string.Join(", ", Values.Select(x => x.Key)));
+            builder.AppendFormat("INSERT INTO {0} ({1}) ",
+                                 SqlIdentifier.Quote(Table, format),
+                                 string.Join(", ", SqlIdentifier.Quote(Values.Select(x => x.Key), format)));
             builder.AppendFormat("VALUES ({0})", string.Join(", ", Values.Select(x => x.Value)));
 
             if (m_UpdateOnDuplicateKey)
             {
                 builder.AppendLine();
                 builder.AppendFormat("ON DUPLICATE KEY UPDATE {0}",
-                                     string.Join(", ", Values.Select(x => x.Key + "=" + x.Value)));
+                                     string.Join(", ",
+                                                 Values.Select(x =>
+                                                     SqlIdentifier.Quote(x.Key, format) + "=" + x.Value)));
             }
 
             if (m_GetLastInsertIdentity)

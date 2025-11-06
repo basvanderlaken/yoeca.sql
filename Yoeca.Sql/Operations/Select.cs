@@ -59,13 +59,17 @@ namespace Yoeca.Sql
         {
             var builder = new StringBuilder();
 
-            builder.AppendFormat("SELECT {0} ", string.Join(", ", Parameters));
-            builder.AppendFormat("FROM {0}", Table);
+            builder.AppendFormat("SELECT {0} ",
+                                 string.Join(", ", SqlIdentifier.Quote(Parameters, format)));
+            builder.AppendFormat("FROM {0}", SqlIdentifier.Quote(Table, format));
+
+            bool isFirstConstraint = true;
 
             foreach (var constraint in Constraints)
             {
                 builder.AppendLine();
-                builder.Append(constraint.Format(format));
+                builder.Append(constraint.Format(format, isFirstConstraint));
+                isFirstConstraint = false;
             }
 
             if (Limit.HasValue)
@@ -81,7 +85,7 @@ namespace Yoeca.Sql
         {
             var column = GetColumn(expression);
 
-            return new SelectValue<T, TValue>(Table, column.Name, Constraints, ValueOperations.Maximum);
+            return new SelectValue<T, TValue>(Table, column, Constraints, ValueOperations.Maximum);
         }
 
         
@@ -89,7 +93,7 @@ namespace Yoeca.Sql
         {
             var column = GetColumn(expression);
 
-            return new SelectValue<T, TValue>(Table, column.Name, Constraints, ValueOperations.Minimum);
+            return new SelectValue<T, TValue>(Table, column, Constraints, ValueOperations.Minimum);
         }
 
         /// <summary>
@@ -102,7 +106,7 @@ namespace Yoeca.Sql
         {
             var column = GetColumn(expression);
 
-            return new SelectValue<T, TValue>(Table, column.Name, Constraints, ValueOperations.Sum);
+            return new SelectValue<T, TValue>(Table, column, Constraints, ValueOperations.Sum);
         }
 
         /// <summary>

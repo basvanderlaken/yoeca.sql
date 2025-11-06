@@ -14,54 +14,68 @@ namespace Yoeca.Sql.Tests.Basic
         public void SelectAll()
         {
             Assert.That(Select<SimpleTableWithName>.All().Format(SqlFormat.MySql),
-                        Is.EqualTo("SELECT Name FROM Simple"));
+                        Is.EqualTo("SELECT `Name` FROM `Simple`"));
             Assert.That(Select<ExtendedTable>.All().Format(SqlFormat.MySql),
-                        Is.EqualTo("SELECT Identifier, Name, Age, Payload FROM Extended"));
+                        Is.EqualTo("SELECT `Identifier`, `Name`, `Age`, `Payload` FROM `Extended`"));
         }
 
         [Test]
         public void SelectAllWithWhere()
         {
             Assert.That(Select<ExtendedTable>.All().WhereEqual(x => x.Name, "Peter").Format(SqlFormat.MySql),
-                        Is.EqualTo("SELECT Identifier, Name, Age, Payload FROM Extended\r\nWHERE Name = 'Peter'"));
+                        Is.EqualTo("SELECT `Identifier`, `Name`, `Age`, `Payload` FROM `Extended`\r\nWHERE `Name` = 'Peter'"));
 
             Assert.That(Select<ExtendedTable>.All().WhereNotEqual(x => x.Name, "Peter").Format(SqlFormat.MySql),
-                        Is.EqualTo("SELECT Identifier, Name, Age, Payload FROM Extended\r\nWHERE Name <> 'Peter'"));
+                        Is.EqualTo("SELECT `Identifier`, `Name`, `Age`, `Payload` FROM `Extended`\r\nWHERE `Name` <> 'Peter'"));
 
             Guid identity = Guid.NewGuid();
             string result =
-                string.Format("SELECT Identifier, Name, Age, Payload FROM Extended\r\nWHERE Identifier = '{0}'",
+                string.Format("SELECT `Identifier`, `Name`, `Age`, `Payload` FROM `Extended`\r\nWHERE `Identifier` = '{0}'",
                               identity.ToString("N"));
             Assert.That(Select<ExtendedTable>.All().WhereEqual(x => x.Identifier, identity).Format(SqlFormat.MySql),
                         Is.EqualTo(result));
         }
 
         [Test]
+        public void SelectAllWithMultipleWhereClauses()
+        {
+            var command = Select<ExtendedTable>.All()
+                .WhereEqual(x => x.Name, "Peter")
+                .WhereEqual(x => x.Age, 42)
+                .Format(SqlFormat.MySql);
+
+            const string expected =
+                "SELECT `Identifier`, `Name`, `Age`, `Payload` FROM `Extended`\r\nWHERE `Name` = 'Peter'\r\nAND `Age` = 42";
+
+            Assert.That(command, Is.EqualTo(expected));
+        }
+
+        [Test]
         public void SelectMaximum()
         {
             Assert.That(Select.From<SimpleTableWithDouble>().Maximum(x => x.Value).Format(SqlFormat.MySql),
-                        Is.EqualTo("SELECT MAX(Value) FROM simple_double"));
+                        Is.EqualTo("SELECT MAX(`Value`) FROM `simple_double`"));
         }
 
         [Test]
         public void SelectMinimum()
         {
             Assert.That(Select.From<SimpleTableWithDouble>().Minimum(x => x.Value).Format(SqlFormat.MySql),
-                        Is.EqualTo("SELECT MIN(Value) FROM simple_double"));
+                        Is.EqualTo("SELECT MIN(`Value`) FROM `simple_double`"));
         }
 
         [Test]
         public void SelectSum()
         {
             Assert.That(Select.From<SimpleTableWithDouble>().Sum(x => x.Value).Format(SqlFormat.MySql),
-                        Is.EqualTo("SELECT SUM(Value) FROM simple_double"));
+                        Is.EqualTo("SELECT SUM(`Value`) FROM `simple_double`"));
         }
 
         [Test]
         public void SelectSumWithGrouping()
         {
             Assert.That(Select.From<ExtendedTable>().SumBy(x => x.Age, x => x.Name).Format(SqlFormat.MySql),
-                        Is.EqualTo("SELECT Name, SUM(Age) FROM Extended\r\nGROUP BY Name"));
+                        Is.EqualTo("SELECT `Name`, SUM(`Age`) FROM `Extended`\r\nGROUP BY `Name`"));
         }
 
         [Test]

@@ -173,5 +173,39 @@ namespace Yoeca.Sql.Tests.Integration
                 Assert.That(otherValue.ValueB, Is.EqualTo(value.ValueB));
             }
         }
+
+        [Test]
+        public void MaximumDateTimeReturnsLatestValue()
+        {
+            DropTable.For<Player>().TryExecute(Connection);
+            CreateTable.For<Player>().Execute(Connection);
+
+            var firstPlayer = new Player
+            {
+                Identifier = Guid.NewGuid(),
+                Name = "First",
+                Age = 30,
+                Birthday = new DateTime(2024, 1, 1, 10, 0, 0, DateTimeKind.Utc)
+            };
+
+            var secondPlayer = new Player
+            {
+                Identifier = Guid.NewGuid(),
+                Name = "Second",
+                Age = 28,
+                Birthday = new DateTime(2024, 2, 1, 10, 0, 0, DateTimeKind.Utc)
+            };
+
+            InsertInto.Row(firstPlayer).Execute(Connection);
+            InsertInto.Row(secondPlayer).Execute(Connection);
+
+            var maximumBirthday = Select.From<Player>()
+                                        .Maximum(player => player.Birthday)
+                                        .ExecuteRead(Connection)
+                                        .ToImmutableList();
+
+            Assert.That(maximumBirthday, Has.Count.EqualTo(1));
+            Assert.That(maximumBirthday[0], Is.EqualTo(secondPlayer.Birthday));
+        }
     }
 }

@@ -13,7 +13,7 @@ namespace Yoeca.Sql
 
         public string Format(SqlFormat format)
         {
-            return "DROP TABLE " + Name;
+            return "DROP TABLE " + SqlIdentifier.Quote(Name, format);
         }
 
         public static DropTable For<T>()

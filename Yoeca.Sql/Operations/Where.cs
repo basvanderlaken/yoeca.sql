@@ -11,8 +11,14 @@ namespace Yoeca.Sql
             Column = column;
         }
 
-        
-        public abstract string Format(SqlFormat format);
+        public string Format(SqlFormat format, bool isFirstClause)
+        {
+            string keyword = isFirstClause ? "WHERE" : "AND";
+
+            return keyword + " " + FormatCondition(format);
+        }
+
+        protected abstract string FormatCondition(SqlFormat format);
     }
 
     public sealed class WhereEqual : Where
@@ -25,9 +31,9 @@ namespace Yoeca.Sql
             Value = value;
         }
 
-        public override string Format(SqlFormat format)
+        protected override string FormatCondition(SqlFormat format)
         {
-            return "WHERE " + Column + " = " + Value;
+            return SqlIdentifier.Quote(Column, format) + " = " + Value;
         }
     }
 
@@ -42,9 +48,9 @@ namespace Yoeca.Sql
             Value = value;
         }
 
-        public override string Format(SqlFormat format)
+        protected override string FormatCondition(SqlFormat format)
         {
-            return "WHERE " + Column + " <> " + Value;
+            return SqlIdentifier.Quote(Column, format) + " <> " + Value;
         }
     }
 
@@ -59,9 +65,9 @@ namespace Yoeca.Sql
             Value = value;
         }
 
-        public override string Format(SqlFormat format)
+        protected override string FormatCondition(SqlFormat format)
         {
-            return "WHERE " + Column + " LIKE " + Value;
+            return SqlIdentifier.Quote(Column, format) + " LIKE " + Value;
         }
     }
 }
