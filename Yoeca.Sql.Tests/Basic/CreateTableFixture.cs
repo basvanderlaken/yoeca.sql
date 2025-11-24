@@ -61,6 +61,19 @@ namespace Yoeca.Sql.Tests.Basic
         }
 
         [Test]
+        public void SupportForTimeOnly()
+        {
+            string expected = string.Join(
+                Environment.NewLine,
+                "CREATE TABLE `simple_timeonly`(",
+                "`Value` TIME",
+                ")");
+            string command = CreateTable.For<SimpleTableWithTimeOnly>().Format(SqlFormat.MySql);
+
+            Assert.That(command, Is.EqualTo(expected));
+        }
+
+        [Test]
         public void SupportForEnums()
         {
             string expected = string.Join(

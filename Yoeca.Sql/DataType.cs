@@ -13,6 +13,7 @@ namespace Yoeca.Sql
         UnsignedLong = 9,
         Decimal = 10,
         Date = 11,
+        Time = 12,
         Unknown = int.MaxValue
     }
 }

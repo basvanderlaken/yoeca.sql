@@ -97,5 +97,30 @@ namespace Yoeca.Sql.Tests.Integration
             Assert.That(result, Is.Not.Null);
             Assert.That(result!.Value, Is.EqualTo(today));
         }
+
+        [Test]
+        public void WhenTimeOnlyIsInsertedItRoundTrips()
+        {
+            DropTable.For<TimeOnlyTable>().TryExecute(Connection);
+            CreateTable.For<TimeOnlyTable>().Execute(Connection);
+
+            var now = TimeOnly.FromDateTime(DateTime.UtcNow);
+
+            var record = new TimeOnlyTable
+            {
+                Id = 1,
+                Value = now
+            };
+
+            Assert.That(InsertInto.Row(record).TryExecute(Connection));
+
+            var result = Select.From<TimeOnlyTable>()
+                .WhereEqual(x => x.Id, 1)
+                .ExecuteRead(Connection)
+                .SingleOrDefault();
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result!.Value, Is.EqualTo(now));
+        }
     }
 }

@@ -15,6 +15,7 @@ namespace Yoeca.Sql.Converters
             new ProtoBufferColumnConverter(),
             new DateTimeColumnConverter(),
             new DateOnlyColumnConverter(),
+            new TimeOnlyColumnConverter(),
             new DecimalColumnConverter (),
         };
     }
