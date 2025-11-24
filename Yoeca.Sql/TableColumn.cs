@@ -62,6 +62,11 @@ namespace Yoeca.Sql
             return new TableColumn(DataType.Decimal, 0, name, false, hasSqlPrimaryKey, false, decimals, decimalFraction);
         }
 
+        public static TableColumn Date(string name, bool notNull, bool primaryKey)
+        {
+            return new TableColumn(DataType.Date, 0, name, notNull, primaryKey, false);
+        }
+
         public string Format(SqlFormat format)
         {
             string result = PreFormat(format);
@@ -119,6 +124,8 @@ namespace Yoeca.Sql
                     return $"{identifier} BLOB";
                 case DataType.Decimal:
                     return $"{identifier} DECIMAL({Decimals},{DecimalFraction})";
+                case DataType.Date:
+                    return $"{identifier} DATE";
                 default:
                     throw new NotSupportedException("Specified data type is not supported: " + DataType);
             }

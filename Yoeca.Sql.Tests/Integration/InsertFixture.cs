@@ -72,5 +72,30 @@ namespace Yoeca.Sql.Tests.Integration
             Assert.That(firstSelected.Identifier, Is.EqualTo(1UL));
             Assert.That(firstSelected.Value, Is.EqualTo("Foo"));
         }
+
+        [Test]
+        public void WhenDateOnlyIsInsertedItRoundTrips()
+        {
+            DropTable.For<DateOnlyTable>().TryExecute(Connection);
+            CreateTable.For<DateOnlyTable>().Execute(Connection);
+
+            var today = DateOnly.FromDateTime(DateTime.UtcNow.Date);
+
+            var record = new DateOnlyTable
+            {
+                Id = 1,
+                Value = today
+            };
+
+            Assert.That(InsertInto.Row(record).TryExecute(Connection));
+
+            var result = Select.From<DateOnlyTable>()
+                .WhereEqual(x => x.Id, 1)
+                .ExecuteRead(Connection)
+                .SingleOrDefault();
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result!.Value, Is.EqualTo(today));
+        }
     }
 }
