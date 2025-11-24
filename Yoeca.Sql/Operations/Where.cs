@@ -1,4 +1,5 @@
 
+using System;
 
 namespace Yoeca.Sql
 {
@@ -68,6 +69,22 @@ namespace Yoeca.Sql
         protected override string FormatCondition(SqlFormat format)
         {
             return SqlIdentifier.Quote(Column, format) + " LIKE " + Value;
+        }
+    }
+
+    public sealed class WhereDayOfWeek : Where
+    {
+        public readonly int DayOfWeek;
+
+        public WhereDayOfWeek(string column, int dayOfWeek)
+            : base(column)
+        {
+            DayOfWeek = dayOfWeek;
+        }
+
+        protected override string FormatCondition(SqlFormat format)
+        {
+            return $"DAYOFWEEK({SqlIdentifier.Quote(Column, format)}) = {DayOfWeek}";
         }
     }
 }

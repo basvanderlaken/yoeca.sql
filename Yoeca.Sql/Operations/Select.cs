@@ -4,6 +4,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using System;
 
 namespace Yoeca.Sql
 {
@@ -185,6 +186,21 @@ namespace Yoeca.Sql
             string formattedValue = "'%" + value + "'";
 
             return With(new WhereLike(column.Name, formattedValue));
+        }
+
+        
+        public Select<T> WhereDayOfWeek(Expression<Func<T, DateOnly>> expression, DayOfWeek dayOfWeek)
+        {
+            var column = GetColumn(expression);
+
+            if (column.Property.PropertyType != typeof(DateOnly))
+            {
+                throw new NotSupportedException("WhereDayOfWeek is only supported for DateOnly columns.");
+            }
+
+            int mysqlDayOfWeek = ((int)dayOfWeek) + 1;
+
+            return With(new WhereDayOfWeek(column.Name, mysqlDayOfWeek));
         }
 
         
