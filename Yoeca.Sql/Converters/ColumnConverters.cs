@@ -16,6 +16,7 @@ namespace Yoeca.Sql.Converters
             new DateTimeColumnConverter(),
             new DateOnlyColumnConverter(),
             new TimeOnlyColumnConverter(),
+            new TimeSpanColumnConverter(),
             new DecimalColumnConverter (),
         };
     }

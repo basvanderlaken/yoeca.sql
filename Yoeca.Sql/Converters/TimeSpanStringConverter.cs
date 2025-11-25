@@ -4,9 +4,9 @@ using System.Globalization;
 
 namespace Yoeca.Sql.Converters
 {
-    internal sealed class TimeOnlyStringConverter : StringConverter
+    internal sealed class TimeSpanStringConverter : StringConverter
     {
-        private const string TimeFormat = "o";
+        private const string TimeFormat = "d\\ hh\\:mm\\:ss\\.ffffff";
 
         public override bool CanConvertTo(ITypeDescriptorContext? context, Type? destinationType)
         {
@@ -24,9 +24,9 @@ namespace Yoeca.Sql.Converters
             object? value,
             Type destinationType)
         {
-            if (value is TimeOnly time)
+            if (value is TimeSpan span)
             {
-                return time.ToString(TimeFormat, CultureInfo.InvariantCulture);
+                return span.ToString(TimeFormat, CultureInfo.InvariantCulture);
             }
 
             return null;
@@ -36,15 +36,20 @@ namespace Yoeca.Sql.Converters
         {
             if (value == null)
             {
-                return TimeOnly.MinValue;
+                return TimeSpan.Zero;
             }
 
-            if (value is TimeSpan timeSpan)
+            if (value is TimeSpan span)
             {
-                return TimeOnly.FromTimeSpan(timeSpan);
+                return span;
             }
 
-            return TimeOnly.Parse((string)value, CultureInfo.InvariantCulture, DateTimeStyles.None);
+            if (TimeSpan.TryParseExact((string)value, TimeFormat, CultureInfo.InvariantCulture, out var result))
+            {
+                return result;
+            }
+
+            return TimeSpan.Parse((string)value, CultureInfo.InvariantCulture);
         }
     }
 }

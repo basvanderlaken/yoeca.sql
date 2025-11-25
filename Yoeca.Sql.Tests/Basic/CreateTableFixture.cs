@@ -74,6 +74,19 @@ namespace Yoeca.Sql.Tests.Basic
         }
 
         [Test]
+        public void SupportForTimeSpan()
+        {
+            string expected = string.Join(
+                Environment.NewLine,
+                "CREATE TABLE `simple_timespan`(",
+                "`Value` TIME",
+                ")");
+            string command = CreateTable.For<SimpleTableWithTimeSpan>().Format(SqlFormat.MySql);
+
+            Assert.That(command, Is.EqualTo(expected));
+        }
+
+        [Test]
         public void SupportForEnums()
         {
             string expected = string.Join(

@@ -6,7 +6,7 @@ using Yoeca.Sql.Converters;
 namespace Yoeca.Sql
 {
     public record  TableColumn (DataType DataType, int Size, string Name, bool NotNull, bool PrimaryKey,
-                            bool AutoIncrement, int Decimals = 8, int DecimalFraction = 2)
+                            bool AutoIncrement, int Decimals = 8, int DecimalFraction = 2, int TimeFraction = 3)
     {
        
 
@@ -62,9 +62,9 @@ namespace Yoeca.Sql
             return new TableColumn(DataType.Decimal, 0, name, false, hasSqlPrimaryKey, false, decimals, decimalFraction);
         }
 
-        public static TableColumn Time(string name, bool notNull, bool primaryKey)
+        public static TableColumn Time(string name, bool notNull, bool primaryKey, int timeFraction)
         {
-            return new TableColumn(DataType.Time, 0, name, notNull, primaryKey, false);
+            return new TableColumn(DataType.Time, 0, name, notNull, primaryKey, false, TimeFraction: timeFraction);
         }
 
         public static TableColumn Date(string name, bool notNull, bool primaryKey)
@@ -132,7 +132,7 @@ namespace Yoeca.Sql
                 case DataType.Date:
                     return $"{identifier} DATE";
                 case DataType.Time:
-                    return $"{identifier} TIME";
+                    return $"{identifier} TIME({TimeFraction})";
                 default:
                     throw new NotSupportedException("Specified data type is not supported: " + DataType);
             }

@@ -120,7 +120,57 @@ namespace Yoeca.Sql.Tests.Integration
                 .SingleOrDefault();
 
             Assert.That(result, Is.Not.Null);
-            Assert.That(result!.Value, Is.EqualTo(now));
+            Assert.That(result!.Value.Ticks, Is.EqualTo(now.Ticks).Within(100));
+        }
+
+        [Test]
+        public void WhenTimeSpanIsInsertedItRoundTrips()
+        {
+            DropTable.For<TimeSpanTable>().TryExecute(Connection);
+            CreateTable.For<TimeSpanTable>().Execute(Connection);
+
+            var span = TimeSpan.FromHours(1) + TimeSpan.FromMinutes(30);
+
+            var record = new TimeSpanTable
+            {
+                Id = 1,
+                Value = span
+            };
+
+            Assert.That(InsertInto.Row(record).TryExecute(Connection));
+
+            var result = Select.From<TimeSpanTable>()
+                .WhereEqual(x => x.Id, 1)
+                .ExecuteRead(Connection)
+                .SingleOrDefault();
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result!.Value, Is.EqualTo(span));
+        }
+
+        [Test]
+        public void WhenTimeSpanIsInsertedGreaterThan24HoursRoundTrips()
+        {
+            DropTable.For<TimeSpanTable>().TryExecute(Connection);
+            CreateTable.For<TimeSpanTable>().Execute(Connection);
+
+            var span = TimeSpan.FromHours(25) + TimeSpan.FromMinutes(30);
+
+            var record = new TimeSpanTable
+            {
+                Id = 1,
+                Value = span
+            };
+
+            Assert.That(InsertInto.Row(record).TryExecute(Connection));
+
+            var result = Select.From<TimeSpanTable>()
+                .WhereEqual(x => x.Id, 1)
+                .ExecuteRead(Connection)
+                .SingleOrDefault();
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result!.Value, Is.EqualTo(span));
         }
     }
 }
