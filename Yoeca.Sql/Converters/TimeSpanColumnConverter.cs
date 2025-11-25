@@ -16,7 +16,7 @@ namespace Yoeca.Sql.Converters
             var column = TableColumn.Time(propertyInfo.Name,
                                           TableColumn.HasSqlNotNull(propertyInfo),
                                           TableColumn.HasSqlPrimaryKey(propertyInfo),
-                                          6);
+                                          TableColumn.GetTimeFraction(propertyInfo));
 
             return new ColumnRetriever(propertyInfo, column, converter, true);
         }

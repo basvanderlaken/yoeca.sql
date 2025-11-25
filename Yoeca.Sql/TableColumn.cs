@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.SqlTypes;
 using System.Linq;
 using System.Reflection;
 using Yoeca.Sql.Converters;
@@ -132,7 +133,11 @@ namespace Yoeca.Sql
                 case DataType.Date:
                     return $"{identifier} DATE";
                 case DataType.Time:
-                    return $"{identifier} TIME({TimeFraction})";
+                    if (TimeFraction > 0)
+                    {
+                        return $"{identifier} TIME({TimeFraction})";
+                    }
+                    return $"{identifier} TIME";
                 default:
                     throw new NotSupportedException("Specified data type is not supported: " + DataType);
             }
@@ -167,7 +172,19 @@ namespace Yoeca.Sql
             return Attribute.GetCustomAttributes(property, typeof(AutoIncrementAttribute)).Any();
         }
 
-        
+        public static int GetTimeFraction(PropertyInfo property)
+        {
+            if (Attribute.GetCustomAttribute(property, typeof(SqlTimeFractionAttribute)) is SqlTimeFractionAttribute fractionAttribute)
+            {
+                return fractionAttribute.NumberOfDecimals;
+            }
+            else
+            {
+                return 3;
+            }
+        }
+
+
         public static TableColumn Create( PropertyInfo property)
         {
             foreach (var columnConverter in ColumnConverters.Default)

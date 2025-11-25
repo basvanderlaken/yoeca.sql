@@ -12,6 +12,7 @@ namespace Yoeca.Sql.Tests.Integration
             set;
         }
 
+        [SqlTimeFraction(6)]
         public TimeOnly Value
         {
             get;

@@ -104,7 +104,7 @@ namespace Yoeca.Sql.Tests.Integration
             DropTable.For<TimeOnlyTable>().TryExecute(Connection);
             CreateTable.For<TimeOnlyTable>().Execute(Connection);
 
-            var now = TimeOnly.FromDateTime(DateTime.UtcNow);
+            var now = new TimeOnly(11, 30, 15, 123, 456);
 
             var record = new TimeOnlyTable
             {
@@ -129,7 +129,7 @@ namespace Yoeca.Sql.Tests.Integration
             DropTable.For<TimeSpanTable>().TryExecute(Connection);
             CreateTable.For<TimeSpanTable>().Execute(Connection);
 
-            var span = TimeSpan.FromHours(1) + TimeSpan.FromMinutes(30);
+            var span = new TimeSpan(10, 30, 15, 5, 123);
 
             var record = new TimeSpanTable
             {
