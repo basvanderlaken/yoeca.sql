@@ -12,6 +12,11 @@ namespace Yoeca.Sql.Converters
             object? value,
             Type destinationType)
         {
+            if (value is null)
+            {
+                return null!;
+            }
+
             if (value is Guid valueGuid)
             {
                 return valueGuid.ToString("N");
@@ -22,12 +27,27 @@ namespace Yoeca.Sql.Converters
 
         public override object ConvertFrom(ITypeDescriptorContext? context, CultureInfo? culture, object value)
         {
+            if (value is null || value is DBNull)
+            {
+                return null!;
+            }
+
             if (value is string stringValue)
             {
+                if (string.IsNullOrWhiteSpace(stringValue))
+                {
+                    return null!;
+                }
+
                 return Guid.Parse(stringValue);
             }
 
-            return Guid.Empty; ;
+            if (value is Guid guidValue)
+            {
+                return guidValue;
+            }
+
+            return null!;
         }
     }
 }

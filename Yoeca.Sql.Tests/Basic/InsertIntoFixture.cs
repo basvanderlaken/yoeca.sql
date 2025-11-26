@@ -52,5 +52,19 @@ namespace Yoeca.Sql.Tests.Basic
 
             Assert.That(command, Is.EqualTo(expected));
         }
+
+        [Test]
+        public void SupportsNullableGuidFormatting()
+        {
+            var value = new Yoeca.Sql.Tests.Integration.NullableGuidTable
+            {
+                Id = 5,
+                OptionalIdentifier = null,
+            };
+
+            string command = InsertInto.Row(value).Format(SqlFormat.MySql);
+
+            Assert.That(command, Is.EqualTo("INSERT INTO `nullable_guid` (`Id`, `OptionalIdentifier`) VALUES (5, NULL)"));
+        }
     }
 }

@@ -66,7 +66,7 @@ namespace Yoeca.Sql.Tests.Basic
             string expected = string.Join(
                 Environment.NewLine,
                 "CREATE TABLE `simple_timeonly`(",
-                "`Value` TIME",
+                "`Value` TIME(3)",
                 ")");
             string command = CreateTable.For<SimpleTableWithTimeOnly>().Format(SqlFormat.MySql);
 
@@ -79,7 +79,7 @@ namespace Yoeca.Sql.Tests.Basic
             string expected = string.Join(
                 Environment.NewLine,
                 "CREATE TABLE `simple_timespan`(",
-                "`Value` TIME",
+                "`Value` TIME(3)",
                 ")");
             string command = CreateTable.For<SimpleTableWithTimeSpan>().Format(SqlFormat.MySql);
 

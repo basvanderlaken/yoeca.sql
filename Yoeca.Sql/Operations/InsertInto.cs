@@ -135,10 +135,15 @@ namespace Yoeca.Sql
 
                 if (value is null)
                 {
-                    throw new InvalidOperationException("Value cannot be converted.");
+                    if (columnRetriever.TableColumn.NotNull)
+                    {
+                        throw new InvalidOperationException("Value cannot be converted.");
+                    }
+
+                    value = "NULL";
                 }
 
-                if (columnRetriever.RequiresEscaping)
+                if (columnRetriever.RequiresEscaping && !string.Equals(value, "NULL", StringComparison.OrdinalIgnoreCase))
                 {
                     value = "'" + value + "'";
                 }

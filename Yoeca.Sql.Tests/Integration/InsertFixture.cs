@@ -172,5 +172,33 @@ namespace Yoeca.Sql.Tests.Integration
             Assert.That(result, Is.Not.Null);
             Assert.That(result!.Value, Is.EqualTo(span));
         }
+
+        [Test]
+        public void WhenNullableGuidIsInsertedItRoundTrips()
+        {
+            DropTable.For<NullableGuidTable>().TryExecute(Connection);
+            CreateTable.For<NullableGuidTable>().Execute(Connection);
+
+            var guidValue = Guid.NewGuid();
+            var first = new NullableGuidTable
+            {
+                Id = 1,
+                OptionalIdentifier = null,
+            };
+
+            var second = new NullableGuidTable
+            {
+                Id = 2,
+                OptionalIdentifier = guidValue,
+            };
+
+            Assert.That(InsertInto.Row(first).TryExecute(Connection));
+            Assert.That(InsertInto.Row(second).TryExecute(Connection));
+
+            var records = Select.From<NullableGuidTable>().ExecuteRead(Connection).OrderBy(x => x.Id).ToImmutableArray();
+            Assert.That(records.Length, Is.EqualTo(2));
+            Assert.That(records[0].OptionalIdentifier, Is.Null);
+            Assert.That(records[1].OptionalIdentifier, Is.EqualTo(guidValue));
+        }
     }
 }

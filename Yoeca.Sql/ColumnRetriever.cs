@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel;
 using System.Reflection;
 using Yoeca.Sql.Converters;
@@ -48,7 +49,11 @@ namespace Yoeca.Sql
         {
             object? propertyValue;
 
-            if (value == null || value.GetType() == Property.PropertyType)
+            if (value == null || value is DBNull)
+            {
+                propertyValue = null;
+            }
+            else if (value.GetType() == Property.PropertyType)
             {
                 propertyValue = value;
             }
@@ -81,6 +86,11 @@ namespace Yoeca.Sql
         public string? Get(object record)
         {
             var propertyValue = Property.GetMethod?.Invoke(record, new object[0]);
+
+            if (propertyValue == null)
+            {
+                return null;
+            }
 
             return Convert.ConvertToString(propertyValue);
         }
