@@ -125,5 +125,31 @@ namespace Yoeca.Sql.Tests.Basic
 
             Assert.That(command, Is.EqualTo(expected));
         }
+
+        [Test]
+        public void SupportForBool()
+        {
+            string expected = string.Join(
+                Environment.NewLine,
+                "CREATE TABLE `simple_bool`(",
+                "`Value` INT SIGNED",
+                ")");
+            string command = CreateTable.For<SimpleTableWithBool>().Format(SqlFormat.MySql);
+
+            Assert.That(command, Is.EqualTo(expected));
+        }
+
+        [Test]
+        public void SupportForNullableBool()
+        {
+            string expected = string.Join(
+                Environment.NewLine,
+                "CREATE TABLE `simple_nullable_bool`(",
+                "`Value` INT SIGNED",
+                ")");
+            string command = CreateTable.For<SimpleTableWithNullableBool>().Format(SqlFormat.MySql);
+
+            Assert.That(command, Is.EqualTo(expected));
+        }
     }
 }

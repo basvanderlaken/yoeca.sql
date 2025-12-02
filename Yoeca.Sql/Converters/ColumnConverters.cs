@@ -4,6 +4,7 @@ namespace Yoeca.Sql.Converters
     {
         public static IEnumerable<IColumnConverter> Default { get; }  = new IColumnConverter[]
         {
+            new BoolColumnConverter(),
             new TypeConverterColumnConverter(),
             new StringColumnConverter(),
             new GuidColumnConverter(),

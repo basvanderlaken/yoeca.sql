@@ -202,6 +202,60 @@ namespace Yoeca.Sql.Tests.Integration
         }
 
         [Test]
+        public void WhenBoolIsInsertedItRoundTrips()
+        {
+            DropTable.For<BoolTable>().TryExecute(Connection);
+            CreateTable.For<BoolTable>().Execute(Connection);
+
+            var record = new BoolTable
+            {
+                Id = 1,
+                Value = true,
+            };
+
+            Assert.That(InsertInto.Row(record).TryExecute(Connection));
+
+            var result = Select.From<BoolTable>()
+                .WhereEqual(x => x.Id, 1)
+                .ExecuteRead(Connection)
+                .SingleOrDefault();
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result!.Value, Is.True);
+        }
+
+        [Test]
+        public void WhenNullableBoolIsInsertedItRoundTrips()
+        {
+            DropTable.For<NullableBoolTable>().TryExecute(Connection);
+            CreateTable.For<NullableBoolTable>().Execute(Connection);
+
+            var falseValue = new NullableBoolTable
+            {
+                Id = 1,
+                Value = false,
+            };
+
+            var nullValue = new NullableBoolTable
+            {
+                Id = 2,
+                Value = null,
+            };
+
+            Assert.That(InsertInto.Row(falseValue).TryExecute(Connection));
+            Assert.That(InsertInto.Row(nullValue).TryExecute(Connection));
+
+            var records = Select.From<NullableBoolTable>()
+                .ExecuteRead(Connection)
+                .OrderBy(x => x.Id)
+                .ToImmutableArray();
+
+            Assert.That(records.Length, Is.EqualTo(2));
+            Assert.That(records[0].Value, Is.False);
+            Assert.That(records[1].Value, Is.Null);
+        }
+
+        [Test]
         public void WhenNullableDecimalIsInsertedItRoundTrips()
         {
             DropTable.For<NullableDecimalTable>().TryExecute(Connection);
