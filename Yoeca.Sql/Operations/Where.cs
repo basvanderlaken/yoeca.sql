@@ -1,5 +1,6 @@
 
 using System;
+using System.Collections.Immutable;
 
 namespace Yoeca.Sql
 {
@@ -85,6 +86,25 @@ namespace Yoeca.Sql
         protected override string FormatCondition(SqlFormat format)
         {
             return $"DAYOFWEEK({SqlIdentifier.Quote(Column, format)}) = {DayOfWeek}";
+        }
+    }
+
+    public sealed class WhereIn : Where
+    {
+        public WhereIn(string column, ImmutableArray<string> values)
+            : base(column)
+        {
+            Values = values;
+        }
+
+        public ImmutableArray<string> Values
+        {
+            get;
+        }
+
+        protected override string FormatCondition(SqlFormat format)
+        {
+            return $"{SqlIdentifier.Quote(Column, format)} IN ({string.Join(", ", Values)})";
         }
     }
 }

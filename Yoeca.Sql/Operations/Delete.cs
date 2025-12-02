@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 
@@ -74,17 +75,7 @@ namespace Yoeca.Sql
         public Delete<T> WhereEqual<TResult>( Expression<Func<T, TResult>> expression,  TResult value)
         {
             var column = GetColumn(expression);
-            string? formattedValue = column.Convert.ConvertToString(value);
-
-            if (formattedValue == null)
-            {
-                throw new ArgumentException("Specified value cannot be converted to column value: " + value);
-            }
-
-            if (column.RequiresEscaping)
-            {
-                formattedValue = "'" + formattedValue + "'";
-            }
+            var formattedValue = FormatValue(column, value);
 
             return With(new WhereEqual(column.Name, formattedValue));
         }
@@ -116,6 +107,23 @@ namespace Yoeca.Sql
             return With(new WhereLike(column.Name, formattedValue));
         }
 
+        public Delete<T> WhereIn<TValue>(Expression<Func<T, TValue>> expression, IEnumerable<TValue> values)
+        {
+            ArgumentNullException.ThrowIfNull(values);
+
+            var valueArray = values.ToImmutableArray();
+
+            if (valueArray.IsEmpty)
+            {
+                throw new ArgumentException("At least one value must be provided.", nameof(values));
+            }
+
+            var column = GetColumn(expression);
+            var formattedValues = valueArray.Select(value => FormatValue(column, value)).ToImmutableArray();
+
+            return With(new WhereIn(column.Name, formattedValues));
+        }
+
         
         private Delete<T> With( Where constraint)
         {
@@ -128,17 +136,7 @@ namespace Yoeca.Sql
              TResult value)
         {
             var column = GetColumn(expression);
-            string? formattedValue = column.Convert.ConvertToString(value);
-
-            if (formattedValue == null)
-            {
-                throw new ArgumentException("Specified value cannot be converted to column value: " + value);
-            }
-
-            if (column.RequiresEscaping)
-            {
-                formattedValue = "'" + formattedValue + "'";
-            }
+            var formattedValue = FormatValue(column, value);
 
             return With(new WhereNotEqual(column.Name, formattedValue));
         }
@@ -156,6 +154,23 @@ namespace Yoeca.Sql
             var definition = new TableDefinition(typeof(T));
 
             return definition.Columns.Single(x => x.Name == member.Member.Name);
+        }
+
+        private static string FormatValue<TValue>(ColumnRetriever column, TValue value)
+        {
+            string? formattedValue = column.Convert.ConvertToString(value);
+
+            if (formattedValue == null)
+            {
+                throw new ArgumentException("Specified value cannot be converted to column value: " + value);
+            }
+
+            if (column.RequiresEscaping)
+            {
+                formattedValue = "'" + formattedValue + "'";
+            }
+
+            return formattedValue;
         }
     }
 }
