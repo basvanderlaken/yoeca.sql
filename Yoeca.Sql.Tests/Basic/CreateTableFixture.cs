@@ -112,5 +112,18 @@ namespace Yoeca.Sql.Tests.Basic
 
             Assert.That(command, Is.EqualTo(expected));
         }
+
+        [Test]
+        public void SupportForNullableDecimal()
+        {
+            string expected = string.Join(
+                Environment.NewLine,
+                "CREATE TABLE `simple_nullable_decimal`(",
+                "`Value` DECIMAL(8,2)",
+                ")");
+            string command = CreateTable.For<SimpleTableWithNullableDecimal>().Format(SqlFormat.MySql);
+
+            Assert.That(command, Is.EqualTo(expected));
+        }
     }
 }

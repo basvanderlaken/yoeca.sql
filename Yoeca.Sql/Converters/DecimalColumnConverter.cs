@@ -6,7 +6,9 @@ namespace Yoeca.Sql.Converters
     {
         public ColumnRetriever? TryGet(PropertyInfo propertyInfo)
         {
-            if (propertyInfo.PropertyType != typeof(Decimal))
+            Type? decimalType = Nullable.GetUnderlyingType(propertyInfo.PropertyType) ?? propertyInfo.PropertyType;
+
+            if (decimalType != typeof(decimal))
             {
                 return null;
             }

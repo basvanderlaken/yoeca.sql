@@ -200,5 +200,36 @@ namespace Yoeca.Sql.Tests.Integration
             Assert.That(records[0].OptionalIdentifier, Is.Null);
             Assert.That(records[1].OptionalIdentifier, Is.EqualTo(guidValue));
         }
+
+        [Test]
+        public void WhenNullableDecimalIsInsertedItRoundTrips()
+        {
+            DropTable.For<NullableDecimalTable>().TryExecute(Connection);
+            CreateTable.For<NullableDecimalTable>().Execute(Connection);
+
+            var withValue = new NullableDecimalTable
+            {
+                Id = 1,
+                Value = 12.34m,
+            };
+
+            var withoutValue = new NullableDecimalTable
+            {
+                Id = 2,
+                Value = null,
+            };
+
+            Assert.That(InsertInto.Row(withValue).TryExecute(Connection));
+            Assert.That(InsertInto.Row(withoutValue).TryExecute(Connection));
+
+            var results = Select.From<NullableDecimalTable>()
+                .ExecuteRead(Connection)
+                .OrderBy(x => x.Id)
+                .ToImmutableArray();
+
+            Assert.That(results.Length, Is.EqualTo(2));
+            Assert.That(results[0].Value, Is.EqualTo(withValue.Value));
+            Assert.That(results[1].Value, Is.Null);
+        }
     }
 }
