@@ -74,6 +74,29 @@ namespace Yoeca.Sql.Tests.Integration
         }
 
         [Test]
+        public void WhenIdentityIsReadAsIntItConvertsFromProviderType()
+        {
+            DropTable.For<TableWithIncrement>().TryExecute(Connection);
+            CreateTable.For<TableWithIncrement>().Execute(Connection);
+
+            var first = new TableWithIncrement
+            {
+                Value = "Foo"
+            };
+
+            var second = new TableWithIncrement
+            {
+                Value = "Bar"
+            };
+
+            var numberFirst = InsertInto.Row(first).GetLastInsertIdentity<int>().ExecuteRead(Connection).Single();
+            var numberSecond = InsertInto.Row(second).GetLastInsertIdentity<int>().ExecuteRead(Connection).Single();
+
+            Assert.That(numberFirst, Is.EqualTo(1));
+            Assert.That(numberSecond, Is.EqualTo(2));
+        }
+
+        [Test]
         public void WhenDateOnlyIsInsertedItRoundTrips()
         {
             DropTable.For<DateOnlyTable>().TryExecute(Connection);

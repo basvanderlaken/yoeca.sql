@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Globalization;
 using System.Text;
 
 namespace Yoeca.Sql
@@ -14,6 +15,7 @@ namespace Yoeca.Sql
         where T : struct
     {
         private readonly InsertInto m_Source;
+        private static readonly Type s_TargetType = typeof(T);
 
         internal InsertInto(InsertInto source)
         {
@@ -23,11 +25,25 @@ namespace Yoeca.Sql
         public T TranslateRow(ISqlFields fields)
         {
             var value = fields.Get(0);
+
+            if (value == null)
+            {
+                return default(T);
+            }
+
             if (value is T expectedValue)
             {
                 return expectedValue;
             }
-            return default(T);
+
+            try
+            {
+                return (T)Convert.ChangeType(value, s_TargetType, CultureInfo.InvariantCulture);
+            }
+            catch
+            {
+                return default(T);
+            }
         }
 
         public string Format(SqlFormat format)

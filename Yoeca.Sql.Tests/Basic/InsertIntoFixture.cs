@@ -66,5 +66,29 @@ namespace Yoeca.Sql.Tests.Basic
 
             Assert.That(command, Is.EqualTo("INSERT INTO `nullable_guid` (`Id`, `OptionalIdentifier`) VALUES (5, NULL)"));
         }
+
+        [Test]
+        public void TranslateRowConvertsProviderValueToRequestedType()
+        {
+            var insert = InsertInto.Row(new TableWithIncrement { Value = "Foo" }).GetLastInsertIdentity<int>();
+            var translated = insert.TranslateRow(new StubFields(5L));
+
+            Assert.That(translated, Is.EqualTo(5));
+        }
+
+        private sealed class StubFields : ISqlFields
+        {
+            private readonly object mValue;
+
+            public StubFields(object value)
+            {
+                mValue = value;
+            }
+
+            public object Get(int fieldIndex)
+            {
+                return mValue;
+            }
+        }
     }
 }
