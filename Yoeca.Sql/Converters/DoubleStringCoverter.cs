@@ -12,12 +12,17 @@ namespace Yoeca.Sql.Converters
             object? value,
             Type destinationType)
         {
+            if (value == null)
+            {
+                return "NULL";
+            }
+
             if (value is double doubleValue)
             {
                 return doubleValue.ToString("G17", CultureInfo.InvariantCulture);
             }
 
-            return string.Empty;
+            return "NULL";
         }
 
         public override object ConvertFrom(ITypeDescriptorContext? context, CultureInfo? culture, object value)
@@ -39,12 +44,17 @@ namespace Yoeca.Sql.Converters
             object? value,
             Type destinationType)
         {
+            if (value == null)
+            {
+                return "NULL";
+            }
+
             if (value is decimal decimalValue)
             {
                 return decimalValue.ToString("G17", CultureInfo.InvariantCulture);
             }
 
-            return string.Empty;
+            return "NULL";
         }
 
         public override object ConvertFrom(ITypeDescriptorContext? context, CultureInfo? culture, object value)
