@@ -160,6 +160,30 @@ namespace Yoeca.Sql
         }
 
         /// <summary>
+        /// Adds a greater-than-or-equal constraint to the update command.
+        /// </summary>
+        /// <typeparam name="TValue">Type of the column.</typeparam>
+        /// <param name="expression">Expression selecting the column for the constraint.</param>
+        /// <param name="value">Lower bound value to compare against.</param>
+        /// <returns>Updated command builder.</returns>
+        public Update<T> WhereGreaterOrEqual<TValue>(Expression<Func<T, TValue>> expression, TValue value)
+        {
+            return With(CreateWhereGreaterOrEqual(expression, value));
+        }
+
+        /// <summary>
+        /// Adds a less-than constraint to the update command.
+        /// </summary>
+        /// <typeparam name="TValue">Type of the column.</typeparam>
+        /// <param name="expression">Expression selecting the column for the constraint.</param>
+        /// <param name="value">Upper bound value to compare against.</param>
+        /// <returns>Updated command builder.</returns>
+        public Update<T> WhereLess<TValue>(Expression<Func<T, TValue>> expression, TValue value)
+        {
+            return With(CreateWhereLess(expression, value));
+        }
+
+        /// <summary>
         /// Adds a contains constraint for text columns.
         /// </summary>
         /// <param name="expression">Expression selecting the column for the constraint.</param>
@@ -240,6 +264,42 @@ namespace Yoeca.Sql
             }
 
             return new WhereNotEqual(column.Name, formattedValue);
+        }
+
+        private static Where CreateWhereGreaterOrEqual<TValue>(Expression<Func<T, TValue>> expression, TValue value)
+        {
+            var column = GetColumn(expression);
+            string? formattedValue = column.Convert.ConvertToString(value);
+
+            if (formattedValue == null)
+            {
+                throw new ArgumentException("Specified value cannot be converted to column value: " + value);
+            }
+
+            if (column.RequiresEscaping)
+            {
+                formattedValue = "'" + formattedValue + "'";
+            }
+
+            return new WhereGreaterOrEqual(column.Name, formattedValue);
+        }
+
+        private static Where CreateWhereLess<TValue>(Expression<Func<T, TValue>> expression, TValue value)
+        {
+            var column = GetColumn(expression);
+            string? formattedValue = column.Convert.ConvertToString(value);
+
+            if (formattedValue == null)
+            {
+                throw new ArgumentException("Specified value cannot be converted to column value: " + value);
+            }
+
+            if (column.RequiresEscaping)
+            {
+                formattedValue = "'" + formattedValue + "'";
+            }
+
+            return new WhereLess(column.Name, formattedValue);
         }
 
         private static ColumnRetriever GetColumn<TValue>(Expression<Func<T, TValue>> expression)

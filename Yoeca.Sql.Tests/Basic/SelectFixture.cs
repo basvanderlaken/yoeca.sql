@@ -51,6 +51,32 @@ namespace Yoeca.Sql.Tests.Basic
         }
 
         [Test]
+        public void SelectWithGreaterOrEqualWhereClause()
+        {
+            var command = Select<ExtendedTable>.All()
+                .WhereGreaterOrEqual(x => x.Age, 18)
+                .Format(SqlFormat.MySql);
+
+            const string expected =
+                "SELECT `Identifier`, `Name`, `Age`, `Payload` FROM `Extended`\r\nWHERE `Age` >= 18";
+
+            Assert.That(command, Is.EqualTo(expected));
+        }
+
+        [Test]
+        public void SelectWithLessWhereClause()
+        {
+            var command = Select<ExtendedTable>.All()
+                .WhereLess(x => x.Age, 18)
+                .Format(SqlFormat.MySql);
+
+            const string expected =
+                "SELECT `Identifier`, `Name`, `Age`, `Payload` FROM `Extended`\r\nWHERE `Age` < 18";
+
+            Assert.That(command, Is.EqualTo(expected));
+        }
+
+        [Test]
         public void SelectMaximum()
         {
             Assert.That(Select.From<SimpleTableWithDouble>().Maximum(x => x.Value).Format(SqlFormat.MySql),

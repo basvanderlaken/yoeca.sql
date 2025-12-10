@@ -65,12 +65,7 @@ namespace Yoeca.Sql.Converters
                 integerValue = (int) value;
             }
 
-            if (integerValue >= m_EnumValues.Length)
-            {
-                return m_EnumValues.GetValue(0);
-            }
-
-            return m_EnumValues.GetValue(integerValue);
+            return Enum.ToObject(m_EnumType, integerValue);
         }
     }
 }

@@ -39,6 +39,38 @@ namespace Yoeca.Sql
         }
     }
 
+    public sealed class WhereGreaterOrEqual : Where
+    {
+        public readonly string Value;
+
+        public WhereGreaterOrEqual(string column, string value)
+            : base(column)
+        {
+            Value = value;
+        }
+
+        protected override string FormatCondition(SqlFormat format)
+        {
+            return SqlIdentifier.Quote(Column, format) + " >= " + Value;
+        }
+    }
+
+    public sealed class WhereLess : Where
+    {
+        public readonly string Value;
+
+        public WhereLess(string column, string value)
+            : base(column)
+        {
+            Value = value;
+        }
+
+        protected override string FormatCondition(SqlFormat format)
+        {
+            return SqlIdentifier.Quote(Column, format) + " < " + Value;
+        }
+    }
+
     public sealed class WhereNotEqual : Where
     {
         

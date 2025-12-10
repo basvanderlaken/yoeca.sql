@@ -25,6 +25,34 @@ namespace Yoeca.Sql.Tests.Basic
         }
 
         [Test]
+        public void FormatsUpdateCommandWithGreaterOrEqual()
+        {
+            string command = Update.Table<ExtendedTable>()
+                .Set(x => x.Name, "Updated")
+                .WhereGreaterOrEqual(x => x.Age, 21)
+                .Format(SqlFormat.MySql);
+
+            const string expected =
+                "UPDATE `Extended` SET `Name` = 'Updated'\r\nWHERE `Age` >= 21";
+
+            Assert.That(command, Is.EqualTo(expected));
+        }
+
+        [Test]
+        public void FormatsUpdateCommandWithLessConstraint()
+        {
+            string command = Update.Table<ExtendedTable>()
+                .Set(x => x.Name, "Updated")
+                .WhereLess(x => x.Age, 65)
+                .Format(SqlFormat.MySql);
+
+            const string expected =
+                "UPDATE `Extended` SET `Name` = 'Updated'\r\nWHERE `Age` < 65";
+
+            Assert.That(command, Is.EqualTo(expected));
+        }
+
+        [Test]
         public void LastSetWins()
         {
             string command = Update.Table<ExtendedTable>()

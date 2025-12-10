@@ -151,6 +151,22 @@ namespace Yoeca.Sql
             return With(new WhereEqual(column.Name, formattedValue));
         }
 
+        public Select<T> WhereGreaterOrEqual<TResult>(Expression<Func<T, TResult>> expression, TResult value)
+        {
+            var column = GetColumn(expression);
+            var formattedValue = FormatValue(column, value);
+
+            return With(new WhereGreaterOrEqual(column.Name, formattedValue));
+        }
+
+        public Select<T> WhereLess<TResult>(Expression<Func<T, TResult>> expression, TResult value)
+        {
+            var column = GetColumn(expression);
+            var formattedValue = FormatValue(column, value);
+
+            return With(new WhereLess(column.Name, formattedValue));
+        }
+
         
         public Select<T> WhereContains(Expression<Func<T, string>> expression,  string value)
         {
