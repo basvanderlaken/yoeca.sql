@@ -120,7 +120,7 @@ namespace Yoeca.Sql
 
             if (column.RequiresEscaping)
             {
-                formattedValue = "'" + formattedValue + "'";
+                formattedValue = "'" + SqlValueEscaper.Escape(formattedValue) + "'";
             }
 
             KeyValuePair<string, string> assignment = new(column.Name, formattedValue);

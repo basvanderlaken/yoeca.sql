@@ -161,7 +161,7 @@ namespace Yoeca.Sql
 
                 if (columnRetriever.RequiresEscaping && !string.Equals(value, "NULL", StringComparison.OrdinalIgnoreCase))
                 {
-                    value = "'" + value + "'";
+                    value = "'" + SqlValueEscaper.Escape(value) + "'";
                 }
 
                 parameters.Add(new KeyValuePair<string, string>(key, value));
