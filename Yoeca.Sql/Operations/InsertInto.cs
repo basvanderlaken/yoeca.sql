@@ -46,7 +46,7 @@ namespace Yoeca.Sql
             }
         }
 
-        public string Format(SqlFormat format)
+        public SqlCommandText Format(SqlFormat format)
         {
             return m_Source.Format(format);
         }
@@ -103,7 +103,7 @@ namespace Yoeca.Sql
             return new InsertInto<T>(value);
         }
 
-        public string Format(SqlFormat format)
+        public SqlCommandText Format(SqlFormat format)
         {
             var builder = new StringBuilder();
 
@@ -127,7 +127,7 @@ namespace Yoeca.Sql
                 builder.Append("SELECT LAST_INSERT_ID();");
             }
 
-            return builder.ToString();
+            return SqlCommandText.WithoutParameters(builder.ToString());
         }
 
         public static InsertInto Row<TRecord>(TRecord record)

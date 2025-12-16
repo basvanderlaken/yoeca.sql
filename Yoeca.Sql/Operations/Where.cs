@@ -1,6 +1,6 @@
-
 using System;
 using System.Collections.Immutable;
+using System.Linq;
 
 namespace Yoeca.Sql
 {
@@ -21,87 +21,145 @@ namespace Yoeca.Sql
         }
 
         protected abstract string FormatCondition(SqlFormat format);
+
+        public abstract ImmutableArray<SqlParameterValue> Parameters
+        {
+            get;
+        }
     }
 
     public sealed class WhereEqual : Where
     {
-        public readonly string Value;
-
-        public WhereEqual( string column,  string value)
+        public WhereEqual(string column, string parameterName, object? value)
             : base(column)
         {
+            ParameterName = parameterName;
             Value = value;
         }
 
+        public string ParameterName
+        {
+            get;
+        }
+
+        public object? Value
+        {
+            get;
+        }
+
+        public override ImmutableArray<SqlParameterValue> Parameters => ImmutableArray.Create(new SqlParameterValue(ParameterName, Value));
+
         protected override string FormatCondition(SqlFormat format)
         {
-            return SqlIdentifier.Quote(Column, format) + " = " + Value;
+            return SqlIdentifier.Quote(Column, format) + " = " + ParameterName;
         }
     }
 
     public sealed class WhereGreaterOrEqual : Where
     {
-        public readonly string Value;
-
-        public WhereGreaterOrEqual(string column, string value)
+        public WhereGreaterOrEqual(string column, string parameterName, object? value)
             : base(column)
         {
+            ParameterName = parameterName;
             Value = value;
         }
 
+        public string ParameterName
+        {
+            get;
+        }
+
+        public object? Value
+        {
+            get;
+        }
+
+        public override ImmutableArray<SqlParameterValue> Parameters => ImmutableArray.Create(new SqlParameterValue(ParameterName, Value));
+
         protected override string FormatCondition(SqlFormat format)
         {
-            return SqlIdentifier.Quote(Column, format) + " >= " + Value;
+            return SqlIdentifier.Quote(Column, format) + " >= " + ParameterName;
         }
     }
 
     public sealed class WhereLess : Where
     {
-        public readonly string Value;
-
-        public WhereLess(string column, string value)
+        public WhereLess(string column, string parameterName, object? value)
             : base(column)
         {
+            ParameterName = parameterName;
             Value = value;
         }
 
+        public string ParameterName
+        {
+            get;
+        }
+
+        public object? Value
+        {
+            get;
+        }
+
+        public override ImmutableArray<SqlParameterValue> Parameters => ImmutableArray.Create(new SqlParameterValue(ParameterName, Value));
+
         protected override string FormatCondition(SqlFormat format)
         {
-            return SqlIdentifier.Quote(Column, format) + " < " + Value;
+            return SqlIdentifier.Quote(Column, format) + " < " + ParameterName;
         }
     }
 
     public sealed class WhereNotEqual : Where
     {
-        
-        public readonly string Value;
-
-        public WhereNotEqual( string column,  string value)
+        public WhereNotEqual(string column, string parameterName, object? value)
             : base(column)
         {
+            ParameterName = parameterName;
             Value = value;
         }
 
+        public string ParameterName
+        {
+            get;
+        }
+
+        public object? Value
+        {
+            get;
+        }
+
+        public override ImmutableArray<SqlParameterValue> Parameters => ImmutableArray.Create(new SqlParameterValue(ParameterName, Value));
+
         protected override string FormatCondition(SqlFormat format)
         {
-            return SqlIdentifier.Quote(Column, format) + " <> " + Value;
+            return SqlIdentifier.Quote(Column, format) + " <> " + ParameterName;
         }
     }
 
     public sealed class WhereLike : Where
     {
-        
-        public readonly string Value;
-
-        public WhereLike( string column,  string value)
+        public WhereLike(string column, string parameterName, object? value)
             : base(column)
         {
+            ParameterName = parameterName;
             Value = value;
         }
 
+        public string ParameterName
+        {
+            get;
+        }
+
+        public object? Value
+        {
+            get;
+        }
+
+        public override ImmutableArray<SqlParameterValue> Parameters => ImmutableArray.Create(new SqlParameterValue(ParameterName, Value));
+
         protected override string FormatCondition(SqlFormat format)
         {
-            return SqlIdentifier.Quote(Column, format) + " LIKE " + Value;
+            return SqlIdentifier.Quote(Column, format) + " LIKE " + ParameterName;
         }
     }
 
@@ -119,24 +177,35 @@ namespace Yoeca.Sql
         {
             return $"DAYOFWEEK({SqlIdentifier.Quote(Column, format)}) = {DayOfWeek}";
         }
+
+        public override ImmutableArray<SqlParameterValue> Parameters => ImmutableArray<SqlParameterValue>.Empty;
     }
 
     public sealed class WhereIn : Where
     {
-        public WhereIn(string column, ImmutableArray<string> values)
+        public WhereIn(string column, ImmutableArray<string> parameterNames, ImmutableArray<object?> values)
             : base(column)
         {
+            ParameterNames = parameterNames;
             Values = values;
         }
 
-        public ImmutableArray<string> Values
+        public ImmutableArray<string> ParameterNames
         {
             get;
         }
 
+        public ImmutableArray<object?> Values
+        {
+            get;
+        }
+
+        public override ImmutableArray<SqlParameterValue> Parameters =>
+            ParameterNames.Zip(Values, (name, value) => new SqlParameterValue(name, value)).ToImmutableArray();
+
         protected override string FormatCondition(SqlFormat format)
         {
-            return $"{SqlIdentifier.Quote(Column, format)} IN ({string.Join(", ", Values)})";
+            return $"{SqlIdentifier.Quote(Column, format)} IN ({string.Join(", ", ParameterNames)})";
         }
     }
 }

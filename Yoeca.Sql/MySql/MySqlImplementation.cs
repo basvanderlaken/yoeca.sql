@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Immutable;
 using System.Data.Common;
 using MySql.Data.MySqlClient;
@@ -18,8 +19,9 @@ namespace Yoeca.Sql.MySql
             var formatted = command.Format(SqlFormat.MySql);
             using (var connection = Open())
             {
-                using (var sqlCommand = new MySqlCommand(formatted, connection))
+                using (var sqlCommand = new MySqlCommand(formatted.Command, connection))
                 {
+                    AddParameters(sqlCommand, formatted.Parameters);
                     sqlCommand.ExecuteNonQuery();
                 }
             }
@@ -30,8 +32,9 @@ namespace Yoeca.Sql.MySql
             var formatted = command.Format(SqlFormat.MySql);
             using (var connection = Open())
             {
-                using (var sqlCommand = new MySqlCommand(formatted, connection))
+                using (var sqlCommand = new MySqlCommand(formatted.Command, connection))
                 {
+                    AddParameters(sqlCommand, formatted.Parameters);
                     await sqlCommand.ExecuteNonQueryAsync();
                 }
             }
@@ -42,8 +45,9 @@ namespace Yoeca.Sql.MySql
             var formatted = command.Format(SqlFormat.MySql);
             using (var connection = Open())
             {
-                using (var sqlCommand = new MySqlCommand(formatted, connection))
+                using (var sqlCommand = new MySqlCommand(formatted.Command, connection))
                 {
+                    AddParameters(sqlCommand, formatted.Parameters);
                     using (var reader = sqlCommand.ExecuteReader())
                     {
                         var fields = new MySqlFields(reader);
@@ -67,8 +71,9 @@ namespace Yoeca.Sql.MySql
             var formatted = command.Format(SqlFormat.MySql);
             using (var connection = Open())
             {
-                using (var sqlCommand = new MySqlCommand(formatted, connection))
+                using (var sqlCommand = new MySqlCommand(formatted.Command, connection))
                 {
+                    AddParameters(sqlCommand, formatted.Parameters);
                     using (var reader = await sqlCommand.ExecuteReaderAsync())
                     {
                         var fields = new MySqlFields(reader);
@@ -93,8 +98,9 @@ namespace Yoeca.Sql.MySql
             var formatted = command.Format(SqlFormat.MySql);
             using (var connection = Open())
             {
-                using (var sqlCommand = new MySqlCommand(formatted, connection))
+                using (var sqlCommand = new MySqlCommand(formatted.Command, connection))
                 {
+                    AddParameters(sqlCommand, formatted.Parameters);
                     using (var reader = sqlCommand.ExecuteReader())
                     {
                         var fields = new MySqlFields(reader);
@@ -114,8 +120,9 @@ namespace Yoeca.Sql.MySql
             var formatted = command.Format(SqlFormat.MySql);
             using (var connection = Open())
             {
-                using (var sqlCommand = new MySqlCommand(formatted, connection))
+                using (var sqlCommand = new MySqlCommand(formatted.Command, connection))
                 {
+                    AddParameters(sqlCommand, formatted.Parameters);
                     using (var reader = await sqlCommand.ExecuteReaderAsync())
                     {
                         var fields = new MySqlFields(reader);
@@ -136,6 +143,14 @@ namespace Yoeca.Sql.MySql
 
             connection.Open();
             return connection;
+        }
+
+        private static void AddParameters(MySqlCommand command, ImmutableArray<SqlParameterValue> parameters)
+        {
+            foreach (var parameter in parameters)
+            {
+                command.Parameters.AddWithValue(parameter.Name, parameter.Value ?? DBNull.Value);
+            }
         }
 
         private sealed class MySqlFields : ISqlFields

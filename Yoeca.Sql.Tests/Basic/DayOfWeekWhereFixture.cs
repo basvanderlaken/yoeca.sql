@@ -14,11 +14,12 @@ namespace Yoeca.Sql.Tests.Basic
                 "SELECT `Value` FROM `simple_dateonly`",
                 "WHERE DAYOFWEEK(`Value`) = 2");
 
-            string command = Select.From<SimpleTableWithDateOnly>()
+            var command = Select.From<SimpleTableWithDateOnly>()
                 .WhereDayOfWeek(x => x.Value, DayOfWeek.Monday)
                 .Format(SqlFormat.MySql);
 
-            Assert.That(command, Is.EqualTo(expected));
+            Assert.That(command.Command, Is.EqualTo(expected));
+            Assert.That(command.Parameters, Is.Empty);
         }
     }
 }

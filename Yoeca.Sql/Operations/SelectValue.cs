@@ -73,9 +73,10 @@ namespace Yoeca.Sql
         }
 
         /// <inheritdoc />
-        public string Format(SqlFormat format)
+        public SqlCommandText Format(SqlFormat format)
         {
             var builder = new StringBuilder();
+            var parameters = ImmutableArray.CreateBuilder<SqlParameterValue>();
             string parameter = SqlIdentifier.Quote(mColumn.Name, format);
             string table = SqlIdentifier.Quote(Table, format);
 
@@ -102,10 +103,11 @@ namespace Yoeca.Sql
             {
                 builder.AppendLine();
                 builder.Append(constraint.Format(format, isFirstConstraint));
+                parameters.AddRange(constraint.Parameters);
                 isFirstConstraint = false;
             }
 
-            return builder.ToString();
+            return new SqlCommandText(builder.ToString(), parameters.ToImmutable());
         }
 
         /// <summary>

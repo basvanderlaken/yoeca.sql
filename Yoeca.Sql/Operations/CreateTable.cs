@@ -14,7 +14,7 @@ namespace Yoeca.Sql
             Columns = columns;
         }
 
-        public string Format(SqlFormat format)
+        public SqlCommandText Format(SqlFormat format)
         {
             var builder = new StringBuilder();
 
@@ -37,7 +37,7 @@ namespace Yoeca.Sql
 
             builder.Append(")");
 
-            return builder.ToString();
+            return SqlCommandText.WithoutParameters(builder.ToString());
         }
 
         public static CreateTable For<T>()

@@ -4,7 +4,6 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
-using System;
 
 namespace Yoeca.Sql
 {
@@ -56,9 +55,10 @@ namespace Yoeca.Sql
             return result;
         }
 
-        public string Format(SqlFormat format)
+        public SqlCommandText Format(SqlFormat format)
         {
             var builder = new StringBuilder();
+            var parameters = ImmutableArray.CreateBuilder<SqlParameterValue>();
 
             builder.AppendFormat("SELECT {0} ",
                                  string.Join(", ", SqlIdentifier.Quote(Parameters, format)));
@@ -70,6 +70,7 @@ namespace Yoeca.Sql
             {
                 builder.AppendLine();
                 builder.Append(constraint.Format(format, isFirstConstraint));
+                parameters.AddRange(constraint.Parameters);
                 isFirstConstraint = false;
             }
 
@@ -79,7 +80,7 @@ namespace Yoeca.Sql
                 builder.AppendFormat("LIMIT {0}", Limit.Value);
             }
 
-            return builder.ToString();
+            return new SqlCommandText(builder.ToString(), parameters.ToImmutable());
         }
 
         public SelectValue<T, TValue> Maximum<TValue>( Expression<Func<T, TValue>> expression)
@@ -146,52 +147,58 @@ namespace Yoeca.Sql
         public Select<T> WhereEqual<TResult>( Expression<Func<T, TResult>> expression,  TResult value)
         {
             var column = GetColumn(expression);
-            var formattedValue = FormatValue(column, value);
+            var parameterName = CreateParameterName();
+            var parameterValue = CreateParameterValue(column, value);
 
-            return With(new WhereEqual(column.Name, formattedValue));
+            return With(new WhereEqual(column.Name, parameterName, parameterValue));
         }
 
         public Select<T> WhereGreaterOrEqual<TResult>(Expression<Func<T, TResult>> expression, TResult value)
         {
             var column = GetColumn(expression);
-            var formattedValue = FormatValue(column, value);
+            var parameterName = CreateParameterName();
+            var parameterValue = CreateParameterValue(column, value);
 
-            return With(new WhereGreaterOrEqual(column.Name, formattedValue));
+            return With(new WhereGreaterOrEqual(column.Name, parameterName, parameterValue));
         }
 
         public Select<T> WhereLess<TResult>(Expression<Func<T, TResult>> expression, TResult value)
         {
             var column = GetColumn(expression);
-            var formattedValue = FormatValue(column, value);
+            var parameterName = CreateParameterName();
+            var parameterValue = CreateParameterValue(column, value);
 
-            return With(new WhereLess(column.Name, formattedValue));
+            return With(new WhereLess(column.Name, parameterName, parameterValue));
         }
 
         
         public Select<T> WhereContains(Expression<Func<T, string>> expression,  string value)
         {
             var column = GetColumn(expression);
-            string formattedValue = "'%" + value + "%'";
+            string parameterName = CreateParameterName();
+            string formattedValue = CreateParameterValue(column, value, v => "%" + v + "%").ToString();
 
-            return With(new WhereLike(column.Name, formattedValue));
+            return With(new WhereLike(column.Name, parameterName, formattedValue));
         }
 
         
         public Select<T> WhereStartsWith( Expression<Func<T, string>> expression,  string value)
         {
             var column = GetColumn(expression);
-            string formattedValue = "'" + value + "%'";
+            string parameterName = CreateParameterName();
+            string formattedValue = CreateParameterValue(column, value, v => v + "%").ToString();
 
-            return With(new WhereLike(column.Name, formattedValue));
+            return With(new WhereLike(column.Name, parameterName, formattedValue));
         }
 
         
         public Select<T> WhereEndsWith( Expression<Func<T, string>> expression,  string value)
         {
             var column = GetColumn(expression);
-            string formattedValue = "'%" + value + "'";
+            string parameterName = CreateParameterName();
+            string formattedValue = CreateParameterValue(column, value, v => "%" + v).ToString();
 
-            return With(new WhereLike(column.Name, formattedValue));
+            return With(new WhereLike(column.Name, parameterName, formattedValue));
         }
 
         
@@ -221,9 +228,10 @@ namespace Yoeca.Sql
              TResult value)
         {
             var column = GetColumn(expression);
-            var formattedValue = FormatValue(column, value);
+            var parameterName = CreateParameterName();
+            var parameterValue = CreateParameterValue(column, value);
 
-            return With(new WhereNotEqual(column.Name, formattedValue));
+            return With(new WhereNotEqual(column.Name, parameterName, parameterValue));
         }
 
         
@@ -244,9 +252,12 @@ namespace Yoeca.Sql
             }
 
             var column = GetColumn(expression);
-            var formattedValues = valueArray.Select(value => FormatValue(column, value)).ToImmutableArray();
+            int startingIndex = CountParameters();
+            var parameterNames = valueArray.Select((_, index) => CreateParameterName(startingIndex + index))
+                .ToImmutableArray();
+            var parameterValues = valueArray.Select(value => CreateParameterValue(column, value)).Cast<object?>().ToImmutableArray();
 
-            return With(new WhereIn(column.Name, formattedValues));
+            return With(new WhereIn(column.Name, parameterNames, parameterValues));
         }
 
         
@@ -264,7 +275,7 @@ namespace Yoeca.Sql
             return definition.Columns.Single(x => x.Name == member.Member.Name);
         }
 
-        private static string FormatValue<TValue>(ColumnRetriever column, TValue value)
+        private static object CreateParameterValue<TValue>(ColumnRetriever column, TValue value, Func<string, string>? formatter = null)
         {
             string? formattedValue = column.Convert.ConvertToString(value);
 
@@ -273,12 +284,27 @@ namespace Yoeca.Sql
                 throw new ArgumentException("Specified value cannot be converted to column value: " + value);
             }
 
-            if (column.RequiresEscaping)
+            if (formatter != null)
             {
-                formattedValue = "'" + formattedValue + "'";
+                formattedValue = formatter(formattedValue);
             }
 
             return formattedValue;
+        }
+
+        private string CreateParameterName()
+        {
+            return CreateParameterName(CountParameters());
+        }
+
+        private static string CreateParameterName(int parameterIndex)
+        {
+            return $"@p{parameterIndex}";
+        }
+
+        private int CountParameters()
+        {
+            return Constraints.Sum(constraint => constraint.Parameters.Length);
         }
     }
 }

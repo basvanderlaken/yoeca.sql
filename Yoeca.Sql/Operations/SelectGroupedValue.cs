@@ -61,9 +61,10 @@ namespace Yoeca.Sql
         }
 
         /// <inheritdoc />
-        public string Format(SqlFormat format)
+        public SqlCommandText Format(SqlFormat format)
         {
             var builder = new StringBuilder();
+            var parameters = ImmutableArray.CreateBuilder<SqlParameterValue>();
             string groupColumn = SqlIdentifier.Quote(GroupColumn, format);
             string valueColumn = SqlIdentifier.Quote(ValueColumn, format);
             string table = SqlIdentifier.Quote(Table, format);
@@ -77,13 +78,14 @@ namespace Yoeca.Sql
             {
                 builder.AppendLine();
                 builder.Append(constraint.Format(format, isFirstConstraint));
+                parameters.AddRange(constraint.Parameters);
                 isFirstConstraint = false;
             }
 
             builder.AppendLine();
             builder.AppendFormat("GROUP BY {0}", groupColumn);
 
-            return builder.ToString();
+            return new SqlCommandText(builder.ToString(), parameters.ToImmutable());
         }
 
         /// <summary>

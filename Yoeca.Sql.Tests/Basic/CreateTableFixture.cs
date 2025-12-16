@@ -16,9 +16,10 @@ namespace Yoeca.Sql.Tests.Basic
                 "`Identifier` CHAR(32) NOT NULL, `Name` VARCHAR(128) NOT NULL, `Age` INT SIGNED, `Payload` BLOB NOT NULL,",
                 "PRIMARY KEY (`Identifier`)",
                 ")");
-            string command = CreateTable.For<ExtendedTable>().Format(SqlFormat.MySql);
+            var command = CreateTable.For<ExtendedTable>().Format(SqlFormat.MySql);
 
-            Assert.That(command, Is.EqualTo(expected));
+            Assert.That(command.Command, Is.EqualTo(expected));
+            Assert.That(command.Parameters, Is.Empty);
         }
 
         [Test]
@@ -29,9 +30,10 @@ namespace Yoeca.Sql.Tests.Basic
                 "CREATE TABLE `simple_datetime`(",
                 "`Value` BIGINT SIGNED",
                 ")");
-            string command = CreateTable.For<SimpleTableWithDateTime>().Format(SqlFormat.MySql);
+            var command = CreateTable.For<SimpleTableWithDateTime>().Format(SqlFormat.MySql);
 
-            Assert.That(command, Is.EqualTo(expected));
+            Assert.That(command.Command, Is.EqualTo(expected));
+            Assert.That(command.Parameters, Is.Empty);
         }
 
         [Test]
@@ -42,9 +44,10 @@ namespace Yoeca.Sql.Tests.Basic
                 "CREATE TABLE `simple_double`(",
                 "`Value` DOUBLE",
                 ")");
-            string command = CreateTable.For<SimpleTableWithDouble>().Format(SqlFormat.MySql);
+            var command = CreateTable.For<SimpleTableWithDouble>().Format(SqlFormat.MySql);
 
-            Assert.That(command, Is.EqualTo(expected));
+            Assert.That(command.Command, Is.EqualTo(expected));
+            Assert.That(command.Parameters, Is.Empty);
         }
 
         [Test]
@@ -55,9 +58,10 @@ namespace Yoeca.Sql.Tests.Basic
                 "CREATE TABLE `simple_dateonly`(",
                 "`Value` DATE",
                 ")");
-            string command = CreateTable.For<SimpleTableWithDateOnly>().Format(SqlFormat.MySql);
+            var command = CreateTable.For<SimpleTableWithDateOnly>().Format(SqlFormat.MySql);
 
-            Assert.That(command, Is.EqualTo(expected));
+            Assert.That(command.Command, Is.EqualTo(expected));
+            Assert.That(command.Parameters, Is.Empty);
         }
 
         [Test]
@@ -68,9 +72,10 @@ namespace Yoeca.Sql.Tests.Basic
                 "CREATE TABLE `simple_timeonly`(",
                 "`Value` TIME(3)",
                 ")");
-            string command = CreateTable.For<SimpleTableWithTimeOnly>().Format(SqlFormat.MySql);
+            var command = CreateTable.For<SimpleTableWithTimeOnly>().Format(SqlFormat.MySql);
 
-            Assert.That(command, Is.EqualTo(expected));
+            Assert.That(command.Command, Is.EqualTo(expected));
+            Assert.That(command.Parameters, Is.Empty);
         }
 
         [Test]
@@ -81,9 +86,10 @@ namespace Yoeca.Sql.Tests.Basic
                 "CREATE TABLE `simple_timespan`(",
                 "`Value` TIME(3)",
                 ")");
-            string command = CreateTable.For<SimpleTableWithTimeSpan>().Format(SqlFormat.MySql);
+            var command = CreateTable.For<SimpleTableWithTimeSpan>().Format(SqlFormat.MySql);
 
-            Assert.That(command, Is.EqualTo(expected));
+            Assert.That(command.Command, Is.EqualTo(expected));
+            Assert.That(command.Parameters, Is.Empty);
         }
 
         [Test]
@@ -95,9 +101,10 @@ namespace Yoeca.Sql.Tests.Basic
                 "`Name` VARCHAR(128) NOT NULL, `Something` INT SIGNED,",
                 "PRIMARY KEY (`Name`)",
                 ")");
-            string command = CreateTable.For<EnumTable>().Format(SqlFormat.MySql);
+            var command = CreateTable.For<EnumTable>().Format(SqlFormat.MySql);
 
-            Assert.That(command, Is.EqualTo(expected));
+            Assert.That(command.Command, Is.EqualTo(expected));
+            Assert.That(command.Parameters, Is.Empty);
         }
 
         [Test]
@@ -108,9 +115,10 @@ namespace Yoeca.Sql.Tests.Basic
                 "CREATE TABLE `Simple`(",
                 "`Name` TEXT",
                 ")");
-            string command = CreateTable.For<SimpleTableWithName>().Format(SqlFormat.MySql);
+            var command = CreateTable.For<SimpleTableWithName>().Format(SqlFormat.MySql);
 
-            Assert.That(command, Is.EqualTo(expected));
+            Assert.That(command.Command, Is.EqualTo(expected));
+            Assert.That(command.Parameters, Is.Empty);
         }
 
         [Test]
@@ -121,9 +129,10 @@ namespace Yoeca.Sql.Tests.Basic
                 "CREATE TABLE `simple_nullable_decimal`(",
                 "`Value` DECIMAL(8,2)",
                 ")");
-            string command = CreateTable.For<SimpleTableWithNullableDecimal>().Format(SqlFormat.MySql);
+            var command = CreateTable.For<SimpleTableWithNullableDecimal>().Format(SqlFormat.MySql);
 
-            Assert.That(command, Is.EqualTo(expected));
+            Assert.That(command.Command, Is.EqualTo(expected));
+            Assert.That(command.Parameters, Is.Empty);
         }
 
         [Test]
@@ -134,9 +143,10 @@ namespace Yoeca.Sql.Tests.Basic
                 "CREATE TABLE `simple_bool`(",
                 "`Value` INT SIGNED",
                 ")");
-            string command = CreateTable.For<SimpleTableWithBool>().Format(SqlFormat.MySql);
+            var command = CreateTable.For<SimpleTableWithBool>().Format(SqlFormat.MySql);
 
-            Assert.That(command, Is.EqualTo(expected));
+            Assert.That(command.Command, Is.EqualTo(expected));
+            Assert.That(command.Parameters, Is.Empty);
         }
 
         [Test]
@@ -147,9 +157,10 @@ namespace Yoeca.Sql.Tests.Basic
                 "CREATE TABLE `simple_nullable_bool`(",
                 "`Value` INT SIGNED",
                 ")");
-            string command = CreateTable.For<SimpleTableWithNullableBool>().Format(SqlFormat.MySql);
+            var command = CreateTable.For<SimpleTableWithNullableBool>().Format(SqlFormat.MySql);
 
-            Assert.That(command, Is.EqualTo(expected));
+            Assert.That(command.Command, Is.EqualTo(expected));
+            Assert.That(command.Parameters, Is.Empty);
         }
     }
 }

@@ -25,9 +25,10 @@ namespace Yoeca.Sql.Tests.Basic
                               value.Identifier.ToString("N") + "', 'Foo', 10, x'FF000000')";
 
 
-            string command = InsertInto.Row(value).Format(SqlFormat.MySql);
+            var command = InsertInto.Row(value).Format(SqlFormat.MySql);
 
-            Assert.That(command, Is.EqualTo(expected));
+            Assert.That(command.Command, Is.EqualTo(expected));
+            Assert.That(command.Parameters, Is.Empty);
 
             command = InsertInto.Row(value).UpdateOnDuplicateKey.Format(SqlFormat.MySql);
 
@@ -35,7 +36,8 @@ namespace Yoeca.Sql.Tests.Basic
                                   value.Identifier.ToString("N") +
                                   "', `Name`='Foo', `Age`=10, `Payload`=x'FF000000'";
 
-            Assert.That(command, Is.EqualTo(fullExpected));
+            Assert.That(command.Command, Is.EqualTo(fullExpected));
+            Assert.That(command.Parameters, Is.Empty);
         }
 
         [Test]
@@ -48,9 +50,10 @@ namespace Yoeca.Sql.Tests.Basic
 
             string expected =
                 $"INSERT INTO `with_autoincrement` (`Value`) VALUES ('Foo');{Environment.NewLine}SELECT LAST_INSERT_ID();";
-            string command = InsertInto.Row(value).GetLastInsertIdentity<long>().Format(SqlFormat.MySql);
+            var command = InsertInto.Row(value).GetLastInsertIdentity<long>().Format(SqlFormat.MySql);
 
-            Assert.That(command, Is.EqualTo(expected));
+            Assert.That(command.Command, Is.EqualTo(expected));
+            Assert.That(command.Parameters, Is.Empty);
         }
 
         [Test]
@@ -62,9 +65,10 @@ namespace Yoeca.Sql.Tests.Basic
                 OptionalIdentifier = null,
             };
 
-            string command = InsertInto.Row(value).Format(SqlFormat.MySql);
+            var command = InsertInto.Row(value).Format(SqlFormat.MySql);
 
-            Assert.That(command, Is.EqualTo("INSERT INTO `nullable_guid` (`Id`, `OptionalIdentifier`) VALUES (5, NULL)"));
+            Assert.That(command.Command, Is.EqualTo("INSERT INTO `nullable_guid` (`Id`, `OptionalIdentifier`) VALUES (5, NULL)"));
+            Assert.That(command.Parameters, Is.Empty);
         }
 
         [Test]

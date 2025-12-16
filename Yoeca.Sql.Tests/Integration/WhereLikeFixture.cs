@@ -31,7 +31,7 @@ namespace Yoeca.Sql.Tests.Integration
             await InsertInto.Row(Create("Bastiaan")).ExecuteAsync(Connection);
             await InsertInto.Row(Create("Harry")).ExecuteAsync(Connection);
 
-            Console.WriteLine(Select<Player>.All().WhereContains(x => x.Name, "illem").Format(SqlFormat.MySql));
+            Console.WriteLine(Select<Player>.All().WhereContains(x => x.Name, "illem").Format(SqlFormat.MySql).Command);
             var result = Select<Player>.All().WhereContains(x => x.Name, "illem").ExecuteRead(Connection).ToList();
 
             Assert.That(result, Has.Count.EqualTo(2));

@@ -11,9 +11,9 @@ namespace Yoeca.Sql
             Name = name;
         }
 
-        public string Format(SqlFormat format)
+        public SqlCommandText Format(SqlFormat format)
         {
-            return "DROP TABLE " + SqlIdentifier.Quote(Name, format);
+            return SqlCommandText.WithoutParameters("DROP TABLE " + SqlIdentifier.Quote(Name, format));
         }
 
         public static DropTable For<T>()
