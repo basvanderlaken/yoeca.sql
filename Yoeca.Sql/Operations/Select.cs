@@ -176,7 +176,7 @@ namespace Yoeca.Sql
         {
             var column = GetColumn(expression);
             string parameterName = CreateParameterName();
-            string formattedValue = CreateParameterValue(column, value, v => "%" + v + "%").ToString();
+            string formattedValue = CreateParameterValue(column, value, v => "%" + v + "%");
 
             return With(new WhereLike(column.Name, parameterName, formattedValue));
         }
@@ -186,7 +186,7 @@ namespace Yoeca.Sql
         {
             var column = GetColumn(expression);
             string parameterName = CreateParameterName();
-            string formattedValue = CreateParameterValue(column, value, v => v + "%").ToString();
+            string formattedValue = CreateParameterValue(column, value, v => v + "%");
 
             return With(new WhereLike(column.Name, parameterName, formattedValue));
         }
@@ -196,7 +196,7 @@ namespace Yoeca.Sql
         {
             var column = GetColumn(expression);
             string parameterName = CreateParameterName();
-            string formattedValue = CreateParameterValue(column, value, v => "%" + v).ToString();
+            string formattedValue = CreateParameterValue(column, value, v => "%" + v);
 
             return With(new WhereLike(column.Name, parameterName, formattedValue));
         }
@@ -275,7 +275,7 @@ namespace Yoeca.Sql
             return definition.Columns.Single(x => x.Name == member.Member.Name);
         }
 
-        private static object CreateParameterValue<TValue>(ColumnRetriever column, TValue value, Func<string, string>? formatter = null)
+        private static string CreateParameterValue<TValue>(ColumnRetriever column, TValue value, Func<string, string>? formatter = null)
         {
             string? formattedValue = column.Convert.ConvertToString(value);
 

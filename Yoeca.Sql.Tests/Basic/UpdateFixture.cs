@@ -23,7 +23,7 @@ namespace Yoeca.Sql.Tests.Basic
                 "UPDATE `Extended` SET `Name` = 'Peter', `Age` = 42\r\nWHERE `Identifier` = @p0";
 
             Assert.That(command.Command, Is.EqualTo(expected));
-            Assert.That(command.Parameters.Single().Value, Is.EqualTo(identifier.ToString()));
+            Assert.That(command.Parameters.Single().Value, Is.EqualTo(identifier.ToString("N")));
         }
 
         [Test]

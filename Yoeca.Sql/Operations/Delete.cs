@@ -106,7 +106,7 @@ namespace Yoeca.Sql
         public Delete<T> WhereContains( Expression<Func<T, string>> expression,  string value)
         {
             var column = GetColumn(expression);
-            string formattedValue = CreateParameterValue(column, value, v => "%" + v + "%").ToString();
+            string formattedValue = CreateParameterValue(column, value, v => "%" + v + "%");
             string parameterName = CreateParameterName();
 
             return With(new WhereLike(column.Name, parameterName, formattedValue));
@@ -116,7 +116,7 @@ namespace Yoeca.Sql
         public Delete<T> WhereStartsWith( Expression<Func<T, string>> expression,  string value)
         {
             var column = GetColumn(expression);
-            string formattedValue = CreateParameterValue(column, value, v => v + "%").ToString();
+            string formattedValue = CreateParameterValue(column, value, v => v + "%");
             string parameterName = CreateParameterName();
 
             return With(new WhereLike(column.Name, parameterName, formattedValue));
@@ -126,7 +126,7 @@ namespace Yoeca.Sql
         public Delete<T> WhereEndsWith( Expression<Func<T, string>> expression,  string value)
         {
             var column = GetColumn(expression);
-            string formattedValue = CreateParameterValue(column, value, v => "%" + v).ToString();
+            string formattedValue = CreateParameterValue(column, value, v => "%" + v);
             string parameterName = CreateParameterName();
 
             return With(new WhereLike(column.Name, parameterName, formattedValue));
@@ -184,7 +184,7 @@ namespace Yoeca.Sql
             return definition.Columns.Single(x => x.Name == member.Member.Name);
         }
 
-        private static object CreateParameterValue<TValue>(ColumnRetriever column, TValue value, Func<string, string>? formatter = null)
+        private static string CreateParameterValue<TValue>(ColumnRetriever column, TValue value, Func<string, string>? formatter = null)
         {
             string? formattedValue = column.Convert.ConvertToString(value);
 
